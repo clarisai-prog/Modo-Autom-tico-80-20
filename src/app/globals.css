@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 160 84% 39%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-slate-950 text-slate-50;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+
+  /* Safe area for mobile bottom nav */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* ============================================================
+   Ana Avatar Animations
+   ============================================================ */
+@keyframes ana-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes ana-pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+@keyframes ana-sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+@keyframes ana-spin-once {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.ana-bounce { animation: ana-bounce 1.5s ease-in-out infinite; }
+.ana-pulse   { animation: ana-pulse-scale 2s ease-in-out infinite; }
+.ana-sway    { animation: ana-sway 2s ease-in-out infinite; }
+.ana-spin    { animation: ana-spin-once 0.8s ease-out forwards; }
+
+/* ============================================================
+   PWA Mobile Optimizations
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  touch-action: pan-y;
+}
+
+/* Prevent text selection on buttons */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Gradient scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #10b981; border-radius: 2px; }
+
+/* Main content area — accounts for bottom nav */
+.main-content {
+  padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Card glassmorphism effect */
+.glass-card {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
