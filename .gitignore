@@ -36,3 +36,6 @@ next-env.d.ts
 # OS files
 .DS_Store
 Thumbs.db
+
+# Skill packages (não pertencem ao projeto)
+*.skill
