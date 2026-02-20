@@ -20,7 +20,7 @@ export default function LoginPage() {
         const { error } = await supabase.auth.signInWithOtp({
             email,
             options: {
-                emailRedirectTo: `${window.location.origin}/auth/callback`,
+                emailRedirectTo: `https://modo-autom-tico-80-20-production.up.railway.app/auth/callback`,
             },
         })
 
