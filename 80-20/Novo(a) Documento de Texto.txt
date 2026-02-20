@@ -1,0 +1,133 @@
+## O que é o Modo Automático 80/20
+
+### Visão Geral em 1 Linha
+> Uma assistente virtual chamada **Ana** que envia **1 mensagem por dia no WhatsApp** para mulheres, no momento exato em que elas iam falhar na alimentação.
+
+***
+
+### Os 3 Personagens do Sistema
+
+| Personagem | Quem é | Papel |
+|---|---|---|
+| **Dr. MOJ** | Homem, médico/mentor, jaleco branco, camiseta laranja | Criador do método. Aparece na landing page e no onboarding para dar credibilidade científica |
+| **Ana** | Mulher slim, cardigan roxo, segura celular | A "amiga" que executa o sistema. É quem manda as mensagens no WhatsApp |
+| **Usuária** | Mulher 25-45 anos, brasileira, exausta | Quem compra e usa o produto |
+
+***
+
+### Como Funciona na Prática
+
+```
+PASSO 1 — Compra (R$27 / R$67 / R$37 mês)
+         ↓
+PASSO 2 — Onboarding: Ana faz 5 perguntas rápidas
+          • Qual sua rotina? (A/B/C/D)
+          • O que mais te atrapalha?
+          • Já tentou dieta antes?
+          • O que te motiva?
+          • Que horário funciona?
+         ↓
+PASSO 3 — Todo dia, no horário escolhido, Ana manda 1 mensagem
+          Exemplo: "Café na correria? Pega uma fruta antes de sair.
+                    Feito? Manda FIZ."
+         ↓
+PASSO 4 — Usuária responde FIZ ou NÃO CONSEGUI
+         ↓
+PASSO 5 — Ana responde de forma diferente para cada resposta
+          FIZ → "Anotado. Até amanhã." (reforço neutro)
+          NÃO CONSEGUI → "Acontece. Amanhã tem outra." (sem julgamento)
+         ↓
+PASSO 6 — Streak acumula (3, 7, 14, 21, 30 dias)
+          → Ana celebra marcos com mensagens especiais
+         ↓
+PASSO 7 — Após 10 FIZ → Ana oferece upgrade de plano (upsell)
+```
+
+***
+
+### Os 3 Planos
+
+| Plano | Preço | O que inclui |
+|---|---|---|
+| **Essencial** | R$27 único | 3 decisões/dia + mensagens WhatsApp 30 dias |
+| **Completo** | R$67 único | 7 decisões/dia + App Web + Plano Pessoal + 30 dias |
+| **Permanente** | R$37/mês | Tudo do Completo + novas decisões todo mês |
+
+***
+
+### O Que o App Web Faz (Plano Completo+)
+
+```
+Tela HOJE      → Mostra a decisão do dia + botões FIZ / NÃO CONSEGUI
+Tela PROGRESSO → Calendário de check-ins + streak atual
+Tela PLANO     → Lista das 7 decisões personalizadas
+Tela RECEITAS  → 80 receitas filtráveis (só no Permanente)
+Tela PERFIL    → Dados, horário, histórico
+```
+
+***
+
+### A Lógica Emocional (para o design entender)
+
+```
+PROBLEMA que o design precisa comunicar:
+"Você não falha por falta de informação.
+ Você falha às 21h quando está destruída
+ e não tem energia para decidir nada."
+
+SOLUÇÃO que o design precisa mostrar:
+"A Ana tira a decisão da sua mão.
+ Você só executa. 1 coisa. Por dia."
+
+DIFERENCIAL que precisa ficar claro:
+Não é dieta → É sistema
+Não é plano → É 1 decisão
+Não é app → É WhatsApp (zero fricção)
+Não é coach → É amiga que entende
+```
+
+***
+
+### Hierarquia Visual do Sistema
+
+```
+MARCA
+└── Modo Automático 80/20
+    ├── Dr. MOJ (cérebro / credibilidade / laboratório)
+    │   └── Aparece: landing page, onboarding, anúncios de autoridade
+    └── Ana (coração / execução )
+        ├── Aparece: app, mensagens, criativos de conversão
+        └── Estados: neutra, comemorando, acolhendo, streak, upsell, onboarding
+```
+
+***
+
+### Paleta + Significado
+
+| Cor | Hex | Representa |
+|---|---|---|
+| **Laranja** | #FF8C42 | Energia, ação, Dr. MOJ, CTA |
+| **Roxo** | #7C3AED | Confiança, Ana, tecnologia, WhatsApp |
+| **Escuro** | #1a0a2e | Seriedade, textos principais |
+| **Fundo lilás** | #faf5ff | Serenidade, seções alternadas |
+| **Fundo laranja** | #fff3eb | Calor, seções de ação |
+
+***
+
+### Tom de Voz (para copywriters e designers saberem o estilo)
+
+```
+✅ Usa: "faz isso", "manda FIZ", "a gente", "rolou", "tá"
+✅ É: amiga que entende, direta, sem drama
+✅ Fala: do momento exato da falha, não do resultado final
+
+❌ Nunca usa: "você consegue!", "acredite em você!", "disciplina"
+❌ Nunca é: médica fria, coach motivacional, guru de dieta
+❌ Nunca foca: na balança, no número, no peso
+```
+
+***
+
+Essa explicação cobre tudo que o designer, desenvolvedor e copywriter precisam saber para criar qualquer peça do sistema com consistência.
+
+Quer que eu gere agora o **documento de marca completo** (brand guide) em HTML para compartilhar com qualquer profissional?
