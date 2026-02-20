@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { User, Clock, CreditCard, LogOut, Calendar, ChevronRight } from 'lucide-react'
+import { Clock, CreditCard, LogOut, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface PerfilClientProps {

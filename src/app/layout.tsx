@@ -28,8 +28,6 @@ export const viewport: Viewport = {
   userScalable: false,
 }
 
-const ROUTES_WITH_NAVBAR = ['/hoje', '/progresso', '/plano', '/receitas', '/perfil']
-
 export default function RootLayout({
   children,
 }: {
