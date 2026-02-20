@@ -1,0 +1,1242 @@
+<!DOCTYPE html><html lang="pt"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Modo Automático 80/20 — Sistema de Decisão Guiada via WhatsApp</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <style>
+        :root {
+            --primary: #2c5530;
+            --secondary: #8b7355;
+            --accent: #d4a574;
+            --neutral: #f7f5f3;
+            --base: #ffffff;
+            --text-primary: #2d2c2a;
+            --text-secondary: #6b7280;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--base);
+            border-right: 1px solid #e5e7eb;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .chart-container {
+            background: var(--base);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .situation-card {
+            background: var(--base);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border-left: 4px solid var(--accent);
+        }
+        
+        .action-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .action-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .action-table td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+        
+        .action-table tr:hover {
+            background: #f9fafb;
+        }
+        
+        .profile-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin: 0.125rem;
+        }
+        
+        .profile-a { background: #fef3c7; color: #92400e; }
+        .profile-b { background: #dbeafe; color: #1e40af; }
+        .profile-c { background: #f3e8ff; color: #7c3aed; }
+        .profile-d { background: #e0e7ff; color: #3730a3; }
+        
+        .citation {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--primary);
+        }
+        
+        .citation:hover {
+            background: #f0f9ff;
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            margin-left: -1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-link:hover,
+        .toc-link.active {
+            color: var(--primary);
+            border-left-color: var(--accent);
+            background: #f9fafb;
+        }
+        
+        .toc-link.sub {
+            padding-left: 2rem;
+            font-size: 0.875rem;
+        }
+        
+        .sticky-toc {
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .insight-highlight {
+            background: linear-gradient(120deg, rgba(212, 165, 116, 0.2) 0%, transparent 100%);
+            border-left: 3px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--base);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--secondary) 50%, transparent 100%);
+            margin: 4rem 0;
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body>
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="sticky-toc">
+        <h3 class="serif text-lg font-bold mb-4 text-gray-800">Índice</h3>
+        <div class="space-y-1">
+          <a href="#introducao" class="toc-link">Introdução</a>
+          <a href="#executiva" class="toc-link">Resumo Executivo</a>
+          <a href="#situacao-1" class="toc-link">Situação 1: Fome Noturna</a>
+          <a href="#situacao-2" class="toc-link">Situação 2: Zero Energia</a>
+          <a href="#situacao-3" class="toc-link">Situação 3: Almoço Fora</a>
+          <a href="#situacao-4" class="toc-link">Situação 4: Fim de Semana</a>
+          <a href="#situacao-5" class="toc-link">Situação 5: Fome Emocional</a>
+          <a href="#situacao-6" class="toc-link">Situação 6: Café da Manhã</a>
+          <a href="#situacao-7" class="toc-link">Situação 7: Supermercado</a>
+          <a href="#analises" class="toc-link">Análises Estatísticas</a>
+          <a href="#conclusao" class="toc-link">Conclusão</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section class="hero-section min-h-screen flex items-center">
+        <div class="hero-overlay"></div>
+        <img src="https://kimi-web-img.moonshot.cn/img/conteudo.imguol.com.br/c66c172e65d9a43486b0786fc66070cfccafddf9.jpg" alt="Mulher brasileira no WhatsApp com frutas na cozinha" class="absolute inset-0 w-full h-full object-cover opacity-20" size="wallpaper" aspect="wide" style="photo" query="mulher brasileira whatsapp cozinha frutas" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+
+        <div class="hero-content container mx-auto px-8 py-16">
+          <div class="bento-grid max-w-6xl mx-auto">
+            <div class="space-y-8">
+              <div class="space-y-4">
+                <h1 class="serif text-6xl md:text-7xl font-bold leading-tight">
+                  <span class="italic">Modo Automático</span>
+                  <br/>
+                  <span class="text-yellow-300">80/20</span>
+                </h1>
+                <p class="text-xl md:text-2xl font-light opacity-90 max-w-2xl">
+                  Sistema de decisão guiada via WhatsApp para mulheres brasileiras em exaustão crônica
+                </p>
+              </div>
+
+              <div class="flex items-center space-x-4">
+                <div class="w-2 h-16 bg-yellow-300"></div>
+                <div class="space-y-2">
+                  <p class="text-lg font-medium">224 ações específicas</p>
+                  <p class="opacity-80">7 situações críticas • 4 perfis de vida</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                <h3 class="serif text-xl font-bold mb-4 text-yellow-300">Princípios Inegociáveis</h3>
+                <ul class="space-y-2 text-sm">
+                  <li class="flex items-center"><i class="fas fa-heart w-4 mr-2"></i>Tom de amiga, nunca coach</li>
+                  <li class="flex items-center"><i class="fas fa-clock w-4 mr-2"></i>Ações em até 2 linhas</li>
+                  <li class="flex items-center"><i class="fas fa-coins w-4 mr-2"></i>Acessível para classe C/D</li>
+                  <li class="flex items-center"><i class="fas fa-ban w-4 mr-2"></i>Zero teoria nutricional</li>
+                </ul>
+              </div>
+
+              <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                <h3 class="serif text-xl font-bold mb-4 text-yellow-300">Para Quem?</h3>
+                <p class="text-sm opacity-90">
+                  Mulheres entre 25-45 anos, brasileiras, em situação de exaustão crônica, que precisam de soluções práticas e imediatas para decisões alimentares.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Introduction -->
+      <section id="introducao" class="py-16 px-8">
+        <div class="container mx-auto max-w-4xl">
+          <div class="prose prose-lg max-w-none">
+            <p class="text-xl leading-relaxed mb-8 text-gray-700">
+              O sistema <strong>Modo Automático 80/20</strong> representa uma revolução na abordagem de intervenção comportamental para emagrecimento. Desenvolvido especificamente para o contexto brasileiro, este protocolo de intervenção via WhatsApp entrega soluções em momentos críticos de falha alimentar, quando a teoria nutricional tradicional falha.
+            </p>
+
+            <div class="insight-highlight">
+              <p class="font-medium text-lg mb-2">Insight Central</p>
+              <p>
+                A grande maioria das falhas alimentares ocorre em 7 situações específicas, não por falta de conhecimento, mas pela ausência de um plano de ação pré-definido e acessível no momento exato da necessidade.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executiva" class="py-16 px-8 bg-white">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="serif text-4xl font-bold mb-8 text-center">Resumo Executivo</h2>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-number">224</span>
+              <p class="text-lg font-medium">Ações Específicas</p>
+              <p class="text-sm text-gray-600">Personalizadas por perfil</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">7</span>
+              <p class="text-lg font-medium">Situações Críticas</p>
+              <p class="text-sm text-gray-600">Mapeadas em detalhe</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">4</span>
+              <p class="text-lg font-medium">Perfis de Vida</p>
+              <p class="text-sm text-gray-600">A, B, C e D</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">0</span>
+              <p class="text-lg font-medium">Teoria Nutricional</p>
+              <p class="text-sm text-gray-600">Só ação concreta</p>
+            </div>
+          </div>
+
+          <div class="mt-12 prose max-w-none">
+            <p class="text-lg text-gray-700">
+              O sistema foi estruturado para atender diferentes perfis de vida feminina brasileira:
+              <strong>Perfil A</strong> (trabalha fora), <strong>Perfil B</strong> (trabalha em casa),
+              <strong>Perfil C</strong> (com filhos), e <strong>Perfil D</strong> (turno noturno).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Situation 1: Night Hunger -->
+      <section id="situacao-1" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <div class="situation-card">
+            <div class="flex items-start mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mr-4">
+                <i class="fas fa-moon text-white text-xl"></i>
+              </div>
+              <div>
+                <h2 class="serif text-3xl font-bold mb-2">Situação 1: Fome Noturna (após 20h)</h2>
+                <p class="text-gray-600"><strong>Contexto:</strong> Cansada, querendo algo gostoso, casa silenciosa</p>
+                <p class="text-gray-600"><strong>Restrição:</strong> Ação deve funcionar com geladeira semi-vazia</p>
+              </div>
+            </div>
+
+            <h3 class="serif text-2xl font-semibold mb-4">15 Variações de Ação Automática</h3>
+
+            <div class="overflow-x-auto">
+              <table class="action-table">
+                <thead>
+                  <tr>
+                    <th class="w-16">Nº</th>
+                    <th class="w-2/5">Ação Automática</th>
+                    <th class="w-1/5">Perfil</th>
+                    <th class="w-16">Tempo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold">1</td>
+                    <td>Pega 1 banana, esmaga com garfo e polvilha canela em pó. Come com colher.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>2 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">2</td>
+                    <td>Fatia 1 maçã em rodelas, passa pasta de amendoim em cada uma.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>3 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">3</td>
+                    <td>Mistura 1 iogurte natural com 1 colher de mel e sementes de chia.</td>
+                    <td><span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                    </td>
+                    <td>2 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">4</td>
+                    <td>Tosta 1 fatia de pão integral, espalha requeijão light e cobre com tomate fatiado.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>3 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">5</td>
+                    <td>Abre 1 lata de atum, escorre e mistura com 1 colher de maionese. Come com palitos de cenoura.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>4 min</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4 class="serif text-xl font-semibold mt-8 mb-4">5 Alternativas de Emergência</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <ul class="space-y-3">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                  <span>Bebe 1 copo grande de água com gás e espera 10 minutos</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                  <span>Pega 1 fruta qualquer que tiver na geladeira e come devagar</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                  <span>Escova os dentes imediatamente</span>
+                </li>
+              </ul>
+              <ul class="space-y-3">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                  <span>Deita na cama e liga 1 vídeo curto no celular</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                  <span>Faz 1 chá de camomila e toma morno</span>
+                </li>
+              </ul>
+            </div>
+
+            <h4 class="serif text-xl font-semibold mb-4">Ações Específicas por Perfil</h4>
+            <div class="overflow-x-auto">
+              <table class="action-table">
+                <thead>
+                  <tr>
+                    <th class="w-1/4">Perfil</th>
+                    <th class="w-1/4">Ação 1</th>
+                    <th class="w-1/4">Ação 2</th>
+                    <th class="w-1/4">Ação 3</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong class="text-yellow-700">A — Trabalha fora</strong></td>
+                    <td>Guarda 1 pacote de castanha na bolsa do trabalho para a noite.</td>
+                    <td>Compra 1 iogurte na padaria próxima antes de chegar em casa.</td>
+                    <td>Prepara 1 marmita com fruta já cortada de manhã.</td>
+                  </tr>
+                  <tr>
+                    <td><strong class="text-blue-700">B — Trabalha em casa</strong></td>
+                    <td>Mantém potes com frutas já lavadas na prateleira da geladeira.</td>
+                    <td>Deixa aveia e canela no balcão da cozinha sempre visível.</td>
+                    <td>Prepara 1 jarra de água saborizada pela manhã.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Situation 2: Zero Energy -->
+      <section id="situacao-2" class="py-16 px-8 bg-gray-50">
+        <div class="container mx-auto max-w-6xl">
+          <div class="situation-card">
+            <div class="flex items-start mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                <i class="fas fa-battery-empty text-white text-xl"></i>
+              </div>
+              <div>
+                <h2 class="serif text-3xl font-bold mb-2">Situação 2: Zero Energia para Cozinhar</h2>
+                <p class="text-gray-600"><strong>Contexto:</strong> Chegou destruída em casa, geladeira vazia ou sem vontade</p>
+                <p class="text-gray-600"><strong>Restrição:</strong> Máximo 5 minutos de preparo. Opções sem fogão incluídas</p>
+              </div>
+            </div>
+
+            <h3 class="serif text-2xl font-semibold mb-4">15 Variações de Ação Automática</h3>
+
+            <div class="overflow-x-auto">
+              <table class="action-table">
+                <thead>
+                  <tr>
+                    <th class="w-16">Nº</th>
+                    <th class="w-2/5">Ação Automática</th>
+                    <th class="w-1/5">Perfil</th>
+                    <th class="w-16">Tempo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold">1</td>
+                    <td>Abre 1 lata de sopa de legumes, aquece no micro-ondas.</td>
+                    <td><span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                    </td>
+                    <td>4 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">2</td>
+                    <td>Mistura 1 lata de atum com arroz de panela de ontem.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>3 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">3</td>
+                    <td>Pega 1 pão sírio, espalha homus e enrola pepino em fatias.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>3 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">4</td>
+                    <td>Aquece 1 ovo no micro-ondas em 45 segundos, coloca em cima de torrada.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>2 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">5</td>
+                    <td>Abre 1 pacote de salada pronta, joga azeite e limão. Come com pão.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>2 min</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Situation 3: Eating Out -->
+      <section id="situacao-3" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <div class="situation-card">
+            <div class="flex items-start mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
+                <i class="fas fa-users text-white text-xl"></i>
+              </div>
+              <div>
+                <h2 class="serif text-3xl font-bold mb-2">Situação 3: Almoço Fora com Colegas</h2>
+                <p class="text-gray-600"><strong>Contexto:</strong> Self-service ou restaurante por quilo, pressão social, cardápio sem controle</p>
+                <p class="text-gray-600"><strong>Restrição:</strong> Ação deve funcionar sem chamar atenção dos colegas</p>
+              </div>
+            </div>
+
+            <h3 class="serif text-2xl font-semibold mb-4">15 Variações de Ação Automática</h3>
+
+            <div class="overflow-x-auto">
+              <table class="action-table">
+                <thead>
+                  <tr>
+                    <th class="w-16">Nº</th>
+                    <th class="w-2/5">Ação Automática</th>
+                    <th class="w-1/5">Perfil</th>
+                    <th class="w-16">Tempo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold">1</td>
+                    <td>Pega 1 prato, enche metade com salada crua primeiro.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>1 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">2</td>
+                    <td>Escolhe 1 proteína grelhada, pede sem molho à parte.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>1 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">3</td>
+                    <td>Pega 1 concha de arroz, 1 de feijão, monta prato pequeno.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>1 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">4</td>
+                    <td>Evita o buffet de frituras, passa direto para as grelhas.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>0 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">5</td>
+                    <td>Pega 1 prato de sopa de legumes como entrada.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>1 min</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Situation 4: Weekend -->
+      <section id="situacao-4" class="py-16 px-8 bg-gray-50">
+        <div class="container mx-auto max-w-6xl">
+          <div class="situation-card">
+            <div class="flex items-start mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-4">
+                <i class="fas fa-calendar-week text-white text-xl"></i>
+              </div>
+              <div>
+                <h2 class="serif text-3xl font-bold mb-2">Situação 4: Fim de Semana Sem Rotina</h2>
+                <p class="text-gray-600"><strong>Contexto:</strong> Sem horário fixo, família em casa, tentação constante</p>
+                <p class="text-gray-600"><strong>Restrição:</strong> Ação não pode depender de preparo elaborado</p>
+              </div>
+            </div>
+
+            <h3 class="serif text-2xl font-semibold mb-4">15 Variações de Ação Automática</h3>
+
+            <div class="overflow-x-auto">
+              <table class="action-table">
+                <thead>
+                  <tr>
+                    <th class="w-16">Nº</th>
+                    <th class="w-2/5">Ação Automática</th>
+                    <th class="w-1/5">Perfil</th>
+                    <th class="w-16">Tempo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold">1</td>
+                    <td>Prepara 1 pote de frutas cortadas de manhã, disponível o dia todo.</td>
+                    <td><span class="profile-badge profile-c">C</span></td>
+                    <td>5 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">2</td>
+                    <td>Mantém 1 garrafa de água na mesa de centro, bebe antes de pegar lanche.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>0 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">3</td>
+                    <td>Pega 1 prato fundo para qualquer refeição, nunca come na embalagem.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>0 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">4</td>
+                    <td>Prepara 1 bandeja com vegetais crus e pasta de amendoim para beliscar.</td>
+                    <td><span class="profile-badge profile-c">C</span></td>
+                    <td>5 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">5</td>
+                    <td>Define 1 horário para &#34;café da tarde&#34;, respeita como compromisso.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>0 min</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Situation 5: Emotional Hunger -->
+      <section id="situacao-5" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <div class="situation-card">
+            <div class="flex items-start mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                <i class="fas fa-heart text-white text-xl"></i>
+              </div>
+              <div>
+                <h2 class="serif text-3xl font-bold mb-2">Situação 5: Fome Emocional / Ansiedade</h2>
+                <p class="text-gray-600"><strong>Contexto:</strong> Não está com fome real, quer mastigar por estresse, tédio ou nervoso</p>
+                <p class="text-gray-600"><strong>Restrição:</strong> Metade das variações (8 de 15) é comportamental, não alimentar</p>
+              </div>
+            </div>
+
+            <h3 class="serif text-2xl font-semibold mb-4">15 Variações de Ação Automática</h3>
+
+            <div class="overflow-x-auto">
+              <table class="action-table">
+                <thead>
+                  <tr>
+                    <th class="w-16">Nº</th>
+                    <th class="w-2/5">Ação Automática</th>
+                    <th class="w-1/5">Perfil</th>
+                    <th class="w-16">Tempo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold">1</td>
+                    <td>Bebe 1 copo de água grande, espera 10 minutos antes de decidir.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>10 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">2</td>
+                    <td>Escova os dentes e passa fio dental imediatamente.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>3 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">3</td>
+                    <td>Sai para 1 caminhada de 10 minutos ao redor do quarteirão.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>10 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">4</td>
+                    <td>Liga para 1 amiga e conversa por 5 minutos.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>5 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">5</td>
+                    <td>Pinta as unhas ou faz 1 skincare rápido.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>10 min</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Situation 6: Breakfast Rush -->
+      <section id="situacao-6" class="py-16 px-8 bg-gray-50">
+        <div class="container mx-auto max-w-6xl">
+          <div class="situation-card">
+            <div class="flex items-start mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center mr-4">
+                <i class="fas fa-sun text-white text-xl"></i>
+              </div>
+              <div>
+                <h2 class="serif text-3xl font-bold mb-2">Situação 6: Café da Manhã Corrido</h2>
+                <p class="text-gray-600"><strong>Contexto:</strong> Acordou atrasada, zero tempo, pensa em pular refeição</p>
+                <p class="text-gray-600"><strong>Restrição:</strong> Ação em menos de 3 minutos, consumo possível em movimento</p>
+              </div>
+            </div>
+
+            <h3 class="serif text-2xl font-semibold mb-4">15 Variações de Ação Automática</h3>
+
+            <div class="overflow-x-auto">
+              <table class="action-table">
+                <thead>
+                  <tr>
+                    <th class="w-16">Nº</th>
+                    <th class="w-2/5">Ação Automática</th>
+                    <th class="w-1/5">Perfil</th>
+                    <th class="w-16">Tempo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold">1</td>
+                    <td>Pega 1 banana e 1 caixinha de leite, toma no caminho.</td>
+                    <td><span class="profile-badge profile-a">A</span></td>
+                    <td>1 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">2</td>
+                    <td>Mistura 1 iogurte com granola em pote, come no elevador.</td>
+                    <td><span class="profile-badge profile-a">A</span></td>
+                    <td>2 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">3</td>
+                    <td>Tosta 1 pão de forma, passa requeijão, come andando.</td>
+                    <td><span class="profile-badge profile-a">A</span></td>
+                    <td>2 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">4</td>
+                    <td>Pega 1 fruta + 1 punhado de castanha, guarda no bolso.</td>
+                    <td><span class="profile-badge profile-a">A</span></td>
+                    <td>1 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">5</td>
+                    <td>Prepara 1 shake de banana e leite na garrafa, toma no ônibus.</td>
+                    <td><span class="profile-badge profile-a">A</span></td>
+                    <td>2 min</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Situation 7: Supermarket -->
+      <section id="situacao-7" class="py-16 px-8">
+        <div class="container mx-auto max-w-6xl">
+          <div class="situation-card">
+            <div class="flex items-start mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-green-600 to-blue-600 rounded-xl flex items-center justify-center mr-4">
+                <i class="fas fa-shopping-cart text-white text-xl"></i>
+              </div>
+              <div>
+                <h2 class="serif text-3xl font-bold mb-2">Situação 7: Supermercado Sem Planejamento</h2>
+                <p class="text-gray-600"><strong>Contexto:</strong> Foi ao mercado com fome ou sem lista, risco de comprar errado</p>
+                <p class="text-gray-600"><strong>Restrição:</strong> Ação deve funcionar dentro do próprio supermercado, antes de chegar em casa</p>
+              </div>
+            </div>
+
+            <h3 class="serif text-2xl font-semibold mb-4">15 Variações de Ação Automática</h3>
+
+            <div class="overflow-x-auto">
+              <table class="action-table">
+                <thead>
+                  <tr>
+                    <th class="w-16">Nº</th>
+                    <th class="w-2/5">Ação Automática</th>
+                    <th class="w-1/5">Perfil</th>
+                    <th class="w-16">Tempo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-semibold">1</td>
+                    <td>Pega 1 cesta pequena, nunca carrinho grande.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>0 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">2</td>
+                    <td>Vai direto ao caixa, compra só 1 item: 1 fruta ou 1 água.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>2 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">3</td>
+                    <td>Liga para 1 amiga enquanto anda, não deixa olhar prateleiras.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>5 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">4</td>
+                    <td>Pega 1 lista no celular, mesmo que mental: 3 itens máximo.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>1 min</td>
+                  </tr>
+                  <tr>
+                    <td class="font-semibold">5</td>
+                    <td>Entra pela porta dos fundos, vai direto ao hortifruti.</td>
+                    <td><span class="profile-badge profile-a">A</span>
+                      <span class="profile-badge profile-b">B</span>
+                      <span class="profile-badge profile-c">C</span>
+                      <span class="profile-badge profile-d">D</span>
+                    </td>
+                    <td>2 min</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Statistical Analysis -->
+      <section id="analises" class="py-16 px-8 bg-gray-50">
+        <div class="container mx-auto max-w-6xl">
+          <h2 class="serif text-4xl font-bold mb-8 text-center">Análises Estatísticas</h2>
+
+          <div class="stats-grid mb-12">
+            <div class="stat-card">
+              <span class="stat-number">224</span>
+              <p class="text-lg font-medium">Ações Específicas</p>
+              <p class="text-sm text-gray-600">Personalizadas por perfil</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">7</span>
+              <p class="text-lg font-medium">Situações Críticas</p>
+              <p class="text-sm text-gray-600">Mapeadas em detalhe</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">4</span>
+              <p class="text-lg font-medium">Perfis de Vida</p>
+              <p class="text-sm text-gray-600">A, B, C e D</p>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">0</span>
+              <p class="text-lg font-medium">Teoria Nutricional</p>
+              <p class="text-sm text-gray-600">Só ação concreta</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+              <h3 class="serif text-2xl font-semibold mb-4">Distribuição por Situação</h3>
+              <ul class="space-y-4">
+                <li class="flex justify-between items-center">
+                  <span>Fome Noturna</span>
+                  <span class="font-semibold">32 ações</span>
+                </li>
+                <li class="flex justify-between items-center">
+                  <span>Zero Energia</span>
+                  <span class="font-semibold">32 ações</span>
+                </li>
+                <li class="flex justify-between items-center">
+                  <span>Almoço Fora</span>
+                  <span class="font-semibold">32 ações</span>
+                </li>
+                <li class="flex justify-between items-center">
+                  <span>Fim de Semana</span>
+                  <span class="font-semibold">32 ações</span>
+                </li>
+                <li class="flex justify-between items-center">
+                  <span>Fome Emocional</span>
+                  <span class="font-semibold">32 ações</span>
+                </li>
+                <li class="flex justify-between items-center">
+                  <span>Café da Manhã</span>
+                  <span class="font-semibold">32 ações</span>
+                </li>
+                <li class="flex justify-between items-center">
+                  <span>Supermercado</span>
+                  <span class="font-semibold">32 ações</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm">
+              <h3 class="serif text-2xl font-semibold mb-4">Recomendações por Perfil</h3>
+              <div class="space-y-4">
+                <div class="flex items-center space-x-3">
+                  <div class="w-4 h-4 bg-yellow-300 rounded-full"></div>
+                  <span><strong>Perfil A:</strong> Trabalha fora, precisa de mobilidade</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <div class="w-4 h-4 bg-blue-300 rounded-full"></div>
+                  <span><strong>Perfil B:</strong> Trabalha em casa, flexibilidade no preparo</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <div class="w-4 h-4 bg-purple-300 rounded-full"></div>
+                  <span><strong>Perfil C:</strong> Com filhos, necessita de praticidade familiar</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <div class="w-4 h-4 bg-indigo-300 rounded-full"></div>
+                  <span><strong>Perfil D:</strong> Turno noturno, adaptações horárias</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Conclusion -->
+      <section id="conclusao" class="py-16 px-8">
+        <div class="container mx-auto max-w-4xl">
+          <h2 class="serif text-4xl font-bold mb-8 text-center">Conclusão</h2>
+
+          <div class="prose prose-lg max-w-none">
+            <p class="text-xl leading-relaxed mb-8 text-gray-700">
+              O <strong>Modo Automático 80/20</strong> representa uma inovação fundamental na abordagem de intervenção comportamental para mulheres brasileiras em situação de exaustão crônica. Diferente de abordagens tradicionais que focam em teoria nutricional e restrições alimentares, este sistema reconhece que a mudança real acontece no momento exato da decisão.
+            </p>
+
+            <div class="insight-highlight">
+              <p class="font-medium text-lg mb-2">Insight Final</p>
+              <p>
+                A eficácia do sistema não está na quantidade de informação, mas na precisão da intervenção no momento certo, com a ação certa, para o perfil certo de vida.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+              <div class="bg-white p-6 rounded-xl shadow-sm">
+                <h3 class="serif text-xl font-semibold mb-4">Principais Vantagens</h3>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <span>Ações em até 2 linhas para máxima simplicidade</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <span>Acessível para classe C/D brasileira</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <span>Personalizado para 4 perfis de vida distintos</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                    <span>Tom de amiga, nunca coach distante</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-white p-6 rounded-xl shadow-sm">
+                <h3 class="serif text-xl font-semibold mb-4">Impacto Esperado</h3>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-up text-blue-500 mt-1 mr-3"></i>
+                    <span>Redução de falhas alimentares em momentos críticos</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-up text-blue-500 mt-1 mr-3"></i>
+                    <span>Aumento da autoconfiança nas escolhas alimentares</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-up text-blue-500 mt-1 mr-3"></i>
+                    <span>Sustentabilidade a longo prazo do processo de emagrecimento</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <p class="text-lg text-center mt-12 text-gray-600">
+              O <strong>Modo Automático 80/20</strong> transforma a luta contra a falha alimentar em uma série de escolhas simples e automáticas, permitindo que as mulheres brasileiras em exaustão crônica finalmente alcancem seus objetivos de emagrecimento sem a frustração das abordagens tradicionais.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="py-12 px-8 bg-gray-800 text-white">
+        <div class="container mx-auto max-w-4xl text-center">
+          <p class="text-gray-400 mb-4">
+            Sistema desenvolvido para mulheres brasileiras em exaustão crônica
+          </p>
+          <p class="text-sm text-gray-500">
+            © 2024 Modo Automático 80/20. Protocolo de intervenção comportamental via WhatsApp.
+          </p>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Table of Contents Scroll Behavior
+        const tocLinks = document.querySelectorAll('.toc-link');
+        const sections = document.querySelectorAll('section[id]');
+        
+        function updateActiveSection() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveSection);
+        
+        // Smooth scrolling for TOC links
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Mobile TOC Toggle
+        function toggleTOC() {
+            const toc = document.querySelector('.toc-fixed');
+            toc.classList.toggle('open');
+        }
+        
+        // Close TOC when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const toc = document.querySelector('.toc-fixed');
+            const hamburger = document.querySelector('.hamburger-button');
+            
+            if (window.innerWidth <= 1024 && 
+                !toc.contains(event.target) && 
+                event.target !== hamburger && 
+                !hamburger.contains(event.target)) {
+                toc.classList.remove('open');
+            }
+        });
+        
+        // Add hamburger button for mobile
+        if (window.innerWidth <= 1024) {
+            const hamburger = document.createElement('button');
+            hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            hamburger.className = 'hamburger-button fixed top-4 left-4 z-50 bg-white p-3 rounded-lg shadow-lg';
+            hamburger.onclick = toggleTOC;
+            document.body.appendChild(hamburger);
+        }
+        
+        // Initialize active section
+        updateActiveSection();
+    </script>
+  
+
+</body></html>

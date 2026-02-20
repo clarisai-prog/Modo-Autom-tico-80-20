@@ -1,0 +1,3351 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Banco de Receitas &#34;Modo Automático 80/20&#34; - Plano Pessoal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e293b',
+                        secondary: '#f59e0b',
+                        accent: '#10b981',
+                        neutral: '#64748b',
+                        'warm-gray': '#f8fafc',
+                        'sage-green': '#84cc16'
+                    },
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-overlay {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(100, 116, 139, 0.7) 100%);
+        }
+        .recipe-card {
+            transition: all 0.3s ease;
+        }
+        .recipe-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        .tag-badge {
+            background: linear-gradient(45deg, #f59e0b, #fbbf24);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .time-badge {
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .protein-badge {
+            background: #84cc16;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body class="bg-warm-gray font-sans scroll-smooth" style="overflow-x: hidden;">
+    <!-- Mobile Menu Toggle -->
+    <button id="mobile-menu-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-primary text-white p-3 rounded-full shadow-lg">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Table of Contents -->
+    <nav id="toc" class="toc-fixed bg-white shadow-lg">
+      <div class="mb-8">
+        <h3 class="font-serif text-lg font-bold text-primary mb-4">Navegação</h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a href="#hero" class="block py-2 px-3 text-neutral hover:text-primary hover:bg-gray-50 rounded transition-colors">Início</a>
+          </li>
+          <li>
+            <a href="#executive-summary" class="block py-2 px-3 text-neutral hover:text-primary hover:bg-gray-50 rounded transition-colors">Sumário Executivo</a>
+          </li>
+          <li>
+            <a href="#breakfast" class="block py-2 px-3 text-neutral hover:text-primary hover:bg-gray-50 rounded transition-colors">Café da Manhã Rápido</a>
+          </li>
+          <li>
+            <a href="#lunch-dinner" class="block py-2 px-3 text-neutral hover:text-primary hover:bg-gray-50 rounded transition-colors">Almoço/Jantar Rápido</a>
+          </li>
+          <li>
+            <a href="#night-snacks" class="block py-2 px-3 text-neutral hover:text-primary hover:bg-gray-50 rounded transition-colors">Lanche Anti-Fome</a>
+          </li>
+          <li>
+            <a href="#emergency" class="block py-2 px-3 text-neutral hover:text-primary hover:bg-gray-50 rounded transition-colors">Emergência</a>
+          </li>
+          <li>
+            <a href="#cross-index" class="block py-2 px-3 text-neutral hover:text-primary hover:bg-gray-50 rounded transition-colors">Índice Cruzado</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="border-t pt-4">
+        <h4 class="font-medium text-primary mb-3">Estatísticas</h4>
+        <div class="space-y-2 text-xs text-neutral">
+          <div class="flex justify-between">
+            <span>Total de Receitas:</span>
+            <span class="font-medium">80</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Categorias:</span>
+            <span class="font-medium">4</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Perfis:</span>
+            <span class="font-medium">A, B, C, D</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section id="hero" class="relative min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white">
+        <div class="absolute inset-0 gradient-overlay"></div>
+        <img src="https://kimi-web-img.moonshot.cn/img/img.yumpu.com/4f1c21de94526535f6de1a85d44469f58131e581.jpg" alt="Arranjo de ingredientes brasileiros em cores vibrantes" class="absolute inset-0 w-full h-full object-cover opacity-30" size="wallpaper" aspect="wide" style="photo" query="composição de ingredientes brasileiros" referrerpolicy="no-referrer" data-modified="1" data-score="0.00"/>
+
+        <div class="relative z-10 container mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-20">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center min-h-screen">
+            <!-- Text Content -->
+            <div class="space-y-4 sm:space-y-6 md:space-y-8">
+              <div class="space-y-2 sm:space-y-4">
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight">
+                  <span class="italic text-secondary">Modo</span>
+                  <br/>
+                  <span class="text-white">Automático</span>
+                  <br/>
+                  <span class="text-accent">80/20</span>
+                </h1>
+                <p class="text-lg sm:text-xl lg:text-2xl text-gray-300 font-light">
+                  Banco de Receitas Inteligentes para Mulheres em Exaustão
+                </p>
+              </div>
+
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/20">
+                <p class="text-lg sm:text-xl font-serif italic text-gray-200 mb-3 sm:mb-4">
+                  &#34;Comida de verdade, para pessoas reais, em situações reais.&#34;
+                </p>
+                <div class="flex items-center gap-2 text-sm text-secondary">
+                  <i class="fas fa-star"></i>
+                  <span>80 receitas práticas e acessíveis</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visual Elements -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-0">
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center">
+                <div class="text-3xl font-bold text-secondary">R$8-15</div>
+                <div class="text-sm text-gray-300">por refeição</div>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center">
+                <div class="text-3xl font-bold text-accent">10min</div>
+                <div class="text-sm text-gray-300">tempo máximo</div>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center">
+                <div class="text-3xl font-bold text-sage-green">4</div>
+                <div class="text-sm text-gray-300">perfis de usuário</div>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center">
+                <div class="text-3xl font-bold text-secondary">7</div>
+                <div class="text-sm text-gray-300">situações de falha</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executive-summary" class="py-20 bg-white">
+        <div class="container mx-auto px-8">
+          <div class="max-w-4xl mx-auto">
+            <h2 class="font-serif text-4xl font-bold text-primary mb-8">Sumário Executivo</h2>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+              <div class="space-y-6">
+                <div class="bg-gradient-to-r from-secondary/10 to-accent/10 rounded-xl p-6">
+                  <h3 class="font-serif text-xl font-bold text-primary mb-4">Problema</h3>
+                  <p class="text-neutral leading-relaxed">
+                    Mulheres brasileiras da classe C/D enfrentam exaustão diária, com tempo e energia limitados para preparar refeições saudáveis e acessíveis.
+                  </p>
+                </div>
+
+                <div class="bg-gradient-to-r from-sage-green/10 to-secondary/10 rounded-xl p-6">
+                  <h3 class="font-serif text-xl font-bold text-primary mb-4">Solução</h3>
+                  <p class="text-neutral leading-relaxed">
+                    Banco de 80 receitas com ingredientes comuns, custo de R$8-15, preparo em até 10 minutos, sem equipamentos especiais.
+                  </p>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div class="bg-gradient-to-r from-accent/10 to-sage-green/10 rounded-xl p-6">
+                  <h3 class="font-serif text-xl font-bold text-primary mb-4">Metodologia</h3>
+                  <p class="text-neutral leading-relaxed">
+                    Categorias baseadas em contextos reais: café da manhã rápido, almoço/jantar, lanches noturnos e emergências.
+                  </p>
+                </div>
+
+                <div class="bg-gradient-to-r from-primary/10 to-neutral/10 rounded-xl p-6">
+                  <h3 class="font-serif text-xl font-bold text-primary mb-4">Resultados</h3>
+                  <p class="text-neutral leading-relaxed">
+                    Acesso a refeições equilibradas em qualquer situação, com medição zero e linguagem coloquial familiar.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-8">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-6">Principais Características</h3>
+              <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-2xl text-secondary"></i>
+                  </div>
+                  <h4 class="font-bold text-primary mb-2">Tempo Zero</h4>
+                  <p class="text-sm text-neutral">Receitas em até 10 minutos, muitas em 2-3 minutos</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shopping-cart text-2xl text-accent"></i>
+                  </div>
+                  <h4 class="font-bold text-primary mb-2">Acessível</h4>
+                  <p class="text-sm text-neutral">Ingredientes encontrados em qualquer mercado popular</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-sage-green/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-2xl text-sage-green"></i>
+                  </div>
+                  <h4 class="font-bold text-primary mb-2">Universal</h4>
+                  <p class="text-sm text-neutral">Adaptado para diferentes perfis e situações de vida</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category 1: Breakfast -->
+      <section id="breakfast" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+              <h2 class="font-serif text-4xl font-bold text-primary mb-4">Café da Manhã Rápido</h2>
+              <p class="text-xl text-neutral max-w-3xl mx-auto">
+                20 receitas para quem tem 0-10 minutos antes de sair. Divididas em três subcategorias para diferentes níveis de energia e tempo.
+              </p>
+            </div>
+
+            <!-- Subcategory 1.1: No Stove -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Sem Fogão — Só Monta</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Iogurte Turbinado</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">iogurte natural, aveia, banana, mel</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura tudo no pote</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Pão com Requeijão e Tomate</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão de forma, requeijão, tomate</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">passa requeijão, coloca fatia de tomate</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Banana com Amendoim</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">banana, pasta de amendoim</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta banana, passa amendoim</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Sanduíche de Queijo Frio</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão de forma, queijo muçarela, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">passa manteiga, coloca queijo, fecha</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Aveia com Leite e Maçã</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">aveia, leite integral, maçã</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">coloca aveia no leite, rala maçã por cima</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Tapioca Pronta com Requeijão</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">tapioca pronta (pacote), requeijão</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">abre pacote, passa requeijão, enrola</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Frutas com Castanha</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">banana, maçã, castanha-do-pará</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta frutas, quebra castanha por cima</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategory 1.2: Microwave -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Com Micro-ondas — Máx 3 min</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Ovo de Caneca</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, leite, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">quebra ovo na caneca, bate com leite, micro-ondas 1 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Bolo de Caneca de Banana</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">banana amassada, aveia, ovo, leite</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">amassa banana, mistura tudo, micro-ondas 2 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Mingau de Aveia Expresso</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">aveia, leite, mel</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura na caneca, micro-ondas 2 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Pão de Queijo de Caneca</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">polvilho, queijo ralado, ovo, leite</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura na caneca, micro-ondas 2 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Omelete de Caneca</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, presunto picado, queijo, leite</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">bate ovo com leite, coloca recheio, micro-ondas 2 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Batata Doce no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">batata doce pequena</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">furar com garfo, micro-ondas 3 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Tapioca de Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">goma de tapioca, água, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura na caneca, micro-ondas 2 min, vira</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategory 1.3: Stove -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Com Fogão — Máx 10 min</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Ovo Mexido Turbinado</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, requeijão, presunto picado</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">bate ovo, frita, coloca requeijão e presunto no final</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Panqueca de Banana</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">8 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">banana amassada, ovo, aveia</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">amassa banana, mistura com ovo e aveia, frita pequenas</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Tapioca na Frigideira</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">goma de tapioca, manteiga, queijo</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">espalha goma na frigideira quente, vira, coloca queijo, dobra</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Ovo Frito com Pão</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, manteiga, pão de forma</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">frita ovo na manteiga, tosta pão na mesma frigideira</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Crepioca Rápida</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">7 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">tapioca, ovo, queijo</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura tapioca com ovo, frita como panqueca, coloca queijo</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Pão na Chapa com Ovo</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">6 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão francês (de ontem), manteiga, ovo</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta pão, tosta na manteiga, frita ovo no meio</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>manhã
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category 2: Lunch/Dinner -->
+      <section id="lunch-dinner" class="py-20 bg-white">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+              <h2 class="font-serif text-4xl font-bold text-primary mb-4">Almoço/Jantar Rápido</h2>
+              <p class="text-xl text-neutral max-w-3xl mx-auto">
+                25 receitas para quem chegou cansada ou tem pouco tempo. Divididas em três subcategorias baseadas no nível de preparo exigido.
+              </p>
+            </div>
+
+            <!-- Subcategory 2.1: No Cooking -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Sem Cozinhar — Monta, Aquece ou Come Frio</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Salada de Atum com Arroz</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">atum em lata, arroz pronto, tomate, cebola</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura atum desfiado com arroz frio, corta tomate e cebola</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Sanduíche de Sardinha</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão de forma, sardinha em lata, tomate</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">escorre sardinha, coloca no pão com fatia de tomate</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Arroz com Feijão e Ovo Cozido</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">4 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">arroz pronto, feijão pronto, ovo cozido</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">aquece arroz e feijão no micro-ondas, corta ovo por cima</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Salada de Frango Desfiado</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">frango desfiado, alface, tomate, cenoura ralada</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura tudo cru, tempera com limão se tiver</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Wrap de Presunto e Queijo</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão de forma grande, presunto, queijo, tomate</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">monta e enrola, pode esquentar 30 seg no micro-ondas</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Cuscuz com Sardinha</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">4 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">cuscuz pronto, sardinha em lata, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">aquece cuscuz no micro-ondas, coloca sardinha por cima</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Arroz com Linguiça Fria</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">arroz pronto, linguiça calabresa cozida</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta linguiça em rodelas, mistura com arroz frio ou aquecido</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Salada de Macarrão com Atum</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">macarrão cozido, atum em lata, tomate, azeite</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura macarrão frio com atum desfiado e tomate picado</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategory 2.2: Stove -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Com Fogão — Até 10 minutos</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Macarrão com Manteiga e Queijo</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">10 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">macarrão, manteiga, queijo muçarela ralado</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">cozinha macarrão, escorre, mistura manteiga e queijo no fogo baixo</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Arroz de Forno Rápido</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">8 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">arroz pronto, queijo, presunto, ovo</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura tudo numa frigideira, tampa e deixa ovo cozinhar no vapor</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Frango Grelhado Rápido</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">10 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">filé de frango, alho, sal, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">tempera, frita na frigideira quente 4 min de cada lado</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Omelete de Queijo e Presunto</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">6 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, queijo, presunto, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">bate ovo, frita, coloca recheio, dobra</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Carne Moída Refogada</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">10 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">carne moída, cebola, alho, óleo</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">refoga cebola e alho, coloca carne, frita até dourar</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">café corrido</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Batata Frita na Frigideira</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">10 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">batata, óleo, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta em palitos, frita no óleo quente até dourar</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Linguiça Acebolada</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">8 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">linguiça calabresa, cebola, óleo</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta linguiça e cebola, refoga tudo junto</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Peixe Frito Rápido</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">8 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">filé de peixe, limão, sal, farinha de mandioca</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">tempera, passa na farinha, frita 3 min de cada lado</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Couve Refogada com Alho</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">couve, alho, óleo, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">refoga alho, coloca couve picada, mexe até murchar</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Arroz com Ovo e Cebolinha</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">7 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">arroz pronto, ovo, cebolinha, óleo</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">frita cebola, coloca arroz, faz espaço, frita ovo, mistura</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategory 2.3: Microwave -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Com Micro-ondas — Até 5 minutos</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Arroz de Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">arroz cru, água, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">coloca em refratário, micro-ondas 12 min (ou arroz pronto: 3 min)</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Batata Assada no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">6 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">batata, manteiga, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">lava, fura, micro-ondas 5 min, corta, coloca manteiga</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Brócolis no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">brócolis, água, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">coloca em refratário com água, micro-ondas 4 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Ovo Pochê no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, água, vinagre (opcional)</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">coloca água na caneca, quebra ovo devagar, micro-ondas 1 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Cenoura Cozida no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">cenoura, água, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta em rodelas, coloca água, micro-ondas 4 min, escorre, coloca manteiga</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">zero energia</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Sopa de Legumes Instantânea</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">6 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">legumes congelados, água, caldo de galinha</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">coloca tudo no refratário, micro-ondas 5 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-gray-50 rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Peixe no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">filé de peixe, limão, sal, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">tempera, coloca na travessa com manteiga, micro-ondas 4 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-sun mr-1"></i>almoço/jantar
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fim de semana</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category 3: Night Snacks -->
+      <section id="night-snacks" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+              <h2 class="font-serif text-4xl font-bold text-primary mb-4">Lanche Anti-Fome Noturna</h2>
+              <p class="text-xl text-neutral max-w-3xl mx-auto">
+                20 receitas para a decisão de fome após 20h. Divididas em doces naturais, salgados leves e opções neutras.
+              </p>
+            </div>
+
+            <!-- Subcategory 3.1: Sweet Natural -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Doces Naturais — Fruta, Mel, Iogurte</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Banana com Mel</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">banana, mel</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta banana, rega mel</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Iogurte com Mel e Canela</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">iogurte natural, mel, canela em pó</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura tudo</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Maçã Assada no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">4 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">maçã, mel, canela</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta maçã, coloca mel e canela, micro-ondas 3 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Abacaxi com Iogurte</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">abacaxi (em calda de lata, escorrido), iogurte natural</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Pera com Mel</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pera, mel</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta pera, rega mel</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Smoothie de Banana</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">banana, leite, mel (opcional)</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">bate no liquidificador ou amassa bem e mistura</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Laranja com Mel</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">laranja, mel</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta laranja em gomos, rega mel</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategory 3.2: Light Savory -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Salgados Leves — Ovo, Queijo, Pão</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Ovo Cozido com Sal</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">cozinha ovo (10 min em água fervente) ou usa pronto</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Queijo com Pão Tostado</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">queijo muçarela, pão de forma, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">tosta pão na frigideira, derrete queijo por cima</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Requeijão com Pão</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">requeijão, pão de forma</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">passa requeijão, come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Ovo Frito Pequeno</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">4 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, manteiga, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">frita ovo pequeno na frigideira</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Tapioca com Queijo</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">goma de tapioca, queijo muçarela</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">faz tapioca na frigideira, coloca queijo, dobra</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Pão com Manteiga e Alho (Torrada)</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão, manteiga, alho amassado</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura manteiga com alho, passa no pão, tosta na frigideira</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Queijo Quente na Frigideira</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">queijo muçarela em fatias</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">coloca queijo na frigideira quente, vira quando derreter e dourar</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategory 3.3: Neutral -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Neutros — Saciam Sem Açúcar Nem Gordura</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Água com Limão</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">zero</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">água, limão</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">espreme limão na água</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Chá de Camomila com Torrada</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">chá de camomila (sachê), torrada (pronta)</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">faz chá, come torrada</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Caldo de Legumes (Pronto)</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">caldo de legumes (caixinha ou tablete), água</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">aquece água, dissolve caldo</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Pepino com Sal</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">zero</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pepino, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">corta pepino em rodelas, polvilha sal</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Cenoura Crua Ralada</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">4 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">cenoura, limão, sal</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">rala cenoura, tempera com limão e sal</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Água de Coco Natural</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">zero</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">água de coco (pronta, caixinha ou coco verde se tiver)</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">abre e bebe</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-moon mr-1"></i>noite
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">fome noturna</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category 4: Emergency -->
+      <section id="emergency" class="py-20 bg-white">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+              <h2 class="font-serif text-4xl font-bold text-primary mb-4">Opções de Emergência</h2>
+              <p class="text-xl text-neutral max-w-3xl mx-auto">
+                15 receitas para quando não tem nada em casa ou não quer fazer nada. Divididas em três subcategorias de extrema simplicidade.
+              </p>
+            </div>
+
+            <!-- Subcategory 4.1: One Ingredient -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Com Só 1 Ingrediente</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-red-50 rounded-xl shadow-lg p-6 border border-red-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Leite Quente com &#34;Película&#34;</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">5 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">leite integral</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">esquenta leite na frigideira até formar película, come com colher</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>A, B, C, D
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-red-50 rounded-xl shadow-lg p-6 border border-red-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Banana Inteira</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">banana</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">descasca e come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-red-50 rounded-xl shadow-lg p-6 border border-red-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Ovo Cozido (Pronto)</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo cozido (comprado ou deixado pronto)</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">descasca e come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-red-50 rounded-xl shadow-lg p-6 border border-red-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Queijo em Fatia</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">zero</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">queijo muçarela em fatia</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">come a fatia</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-red-50 rounded-xl shadow-lg p-6 border border-red-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Pão Seco</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">zero</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão de forma ou francês</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategory 4.2: Under 2 Minutes -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Em Menos de 2 Minutos</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-orange-50 rounded-xl shadow-lg p-6 border border-orange-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Requeijão no Pão</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão, requeijão</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">passa requeijão, come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-orange-50 rounded-xl shadow-lg p-6 border border-orange-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Atum na Lata (Escorrido)</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">atum em lata</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">abre, escorre, come com garfo</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-orange-50 rounded-xl shadow-lg p-6 border border-orange-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Iogurte Natural</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">zero</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">iogurte natural (copinho)</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">abre e come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-orange-50 rounded-xl shadow-lg p-6 border border-orange-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Aveia com Água</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">aveia, água</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">mistura aveia na água, espera 1 min, come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-orange-50 rounded-xl shadow-lg p-6 border border-orange-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Sardinha no Pão</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão, sardinha em lata</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">abre sardinha, coloca no pão, come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subcategory 4.3: Zero Skill -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Qualquer Pessoa Consegue Fazer — Zero Habilidade</h3>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="recipe-card bg-green-50 rounded-xl shadow-lg p-6 border border-green-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Manteiga no Pão</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">1 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">pão, manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">passa manteiga no pão</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-green-50 rounded-xl shadow-lg p-6 border border-green-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Arroz com Manteiga</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">arroz pronto (de ontem ou pacote), manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">aquece arroz, coloca manteiga, mistura</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-green-50 rounded-xl shadow-lg p-6 border border-green-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Macarrão com Manteiga</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">3 min</span>
+                      <span class="protein-badge">baixa</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">macarrão cozido (de ontem), manteiga</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">aquece macarrão, coloca manteiga, mistura</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-green-50 rounded-xl shadow-lg p-6 border border-green-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Ovo Mexido no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">alta</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">ovo, leite (opcional)</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">quebra ovo na caneca, bate com garfo, micro-ondas 1 min</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+
+                <div class="recipe-card bg-green-50 rounded-xl shadow-lg p-6 border border-green-100">
+                  <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-bold text-primary text-lg">Queijo Derretido no Micro-ondas</h4>
+                    <div class="flex gap-2">
+                      <span class="time-badge">2 min</span>
+                      <span class="protein-badge">média</span>
+                    </div>
+                  </div>
+                  <div class="space-y-3 mb-4">
+                    <div>
+                      <strong class="text-neutral">Ingredientes:</strong>
+                      <p class="text-sm text-gray-600">queijo muçarela ralado ou fatiado</p>
+                    </div>
+                    <div>
+                      <strong class="text-neutral">Preparo:</strong>
+                      <p class="text-sm text-gray-600">coloca no prato, micro-ondas 1 min, come</p>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="text-sm text-neutral">
+                      <i class="fas fa-clock mr-1"></i>qualquer
+                      <i class="fas fa-users ml-3 mr-1"></i>todos
+                    </div>
+                    <span class="tag-badge">emergência</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cross Index -->
+      <section id="cross-index" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+              <h2 class="font-serif text-4xl font-bold text-primary mb-4">Índice Cruzado</h2>
+              <p class="text-xl text-neutral max-w-3xl mx-auto">
+                Receitas recomendadas por perfil e situação de falha para navegação rápida e eficiente.
+              </p>
+            </div>
+
+            <!-- By Profile -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Por Perfil — 10 Receitas Recomendadas Primeiro</h3>
+
+              <!-- Profile A -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Perfil A (Mais Energia, Algum Tempo)</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Por que recomendar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Ovo de Caneca</td>
+                          <td class="py-3 px-4 text-secondary">1.2.1</td>
+                          <td class="py-3 px-4">Rápido, proteico, versátil</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Panqueca de Banana</td>
+                          <td class="py-3 px-4 text-secondary">1.3.2</td>
+                          <td class="py-3 px-4">Prazeroso, fim de semana</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Frango Grelhado Rápido</td>
+                          <td class="py-3 px-4 text-secondary">2.2.3</td>
+                          <td class="py-3 px-4">Proteína de qualidade, saciedade</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Salada de Frango Desfiado</td>
+                          <td class="py-3 px-4 text-secondary">2.1.4</td>
+                          <td class="py-3 px-4">Refrescante, equilibrada</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Bolo de Caneca de Banana</td>
+                          <td class="py-3 px-4 text-secondary">1.2.2</td>
+                          <td class="py-3 px-4">Conforto, doce natural</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">6</td>
+                          <td class="py-3 px-4 font-medium">Tapioca na Frigideira</td>
+                          <td class="py-3 px-4 text-secondary">1.3.3</td>
+                          <td class="py-3 px-4">Tradição brasileira, rápida</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">7</td>
+                          <td class="py-3 px-4 font-medium">Arroz de Forno Rápido</td>
+                          <td class="py-3 px-4 text-secondary">2.2.2</td>
+                          <td class="py-3 px-4">Completa, uma panela só</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">8</td>
+                          <td class="py-3 px-4 font-medium">Peixe Frito Rápido</td>
+                          <td class="py-3 px-4 text-secondary">2.2.8</td>
+                          <td class="py-3 px-4">Variedade proteica, sabor</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">9</td>
+                          <td class="py-3 px-4 font-medium">Maçã Assada no Micro-ondas</td>
+                          <td class="py-3 px-4 text-secondary">3.1.3</td>
+                          <td class="py-3 px-4">Sobremesa quente, conforto</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">10</td>
+                          <td class="py-3 px-4 font-medium">Smoothie de Banana</td>
+                          <td class="py-3 px-4 text-secondary">3.1.6</td>
+                          <td class="py-3 px-4">Hidratação, nutrientes</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profile B -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Perfil B (Energia Média, Pouco Tempo)</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Por que recomendar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Ovo Mexido Turbinado</td>
+                          <td class="py-3 px-4 text-secondary">1.3.1</td>
+                          <td class="py-3 px-4">Café proteico, 5 min</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Tapioca com Queijo</td>
+                          <td class="py-3 px-4 text-secondary">3.2.5</td>
+                          <td class="py-3 px-4">Noturno, saciedade</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Macarrão com Manteiga e Queijo</td>
+                          <td class="py-3 px-4 text-secondary">2.2.1</td>
+                          <td class="py-3 px-4">Conforto, familiar</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Iogurte Turbinado</td>
+                          <td class="py-3 px-4 text-secondary">1.1.1</td>
+                          <td class="py-3 px-4">Café rápido, nutritivo</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Omelete de Queijo e Presunto</td>
+                          <td class="py-3 px-4 text-secondary">2.2.4</td>
+                          <td class="py-3 px-4">Almoço completo, 6 min</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">6</td>
+                          <td class="py-3 px-4 font-medium">Wrap de Presunto e Queijo</td>
+                          <td class="py-3 px-4 text-secondary">2.1.5</td>
+                          <td class="py-3 px-4">Portátil, sem louça</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">7</td>
+                          <td class="py-3 px-4 font-medium">Mingau de Aveia Expresso</td>
+                          <td class="py-3 px-4 text-secondary">1.2.3</td>
+                          <td class="py-3 px-4">Zero energia, quente</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">8</td>
+                          <td class="py-3 px-4 font-medium">Queijo Quente na Frigideira</td>
+                          <td class="py-3 px-4 text-secondary">3.2.7</td>
+                          <td class="py-3 px-4">Noturno, prazer</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">9</td>
+                          <td class="py-3 px-4 font-medium">Salada de Macarrão com Atum</td>
+                          <td class="py-3 px-4 text-secondary">2.1.8</td>
+                          <td class="py-3 px-4">Sobra, refrescante</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">10</td>
+                          <td class="py-3 px-4 font-medium">Pão com Manteiga e Alho</td>
+                          <td class="py-3 px-4 text-secondary">3.2.6</td>
+                          <td class="py-3 px-4">Aromático, satisfatório</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profile C -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Perfil C (Pouca Energia, Muito Pouco Tempo)</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Por que recomendar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Tapioca Pronta com Requeijão</td>
+                          <td class="py-3 px-4 text-secondary">1.1.6</td>
+                          <td class="py-3 px-4">1 min, emergência matinal</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Requeijão no Pão</td>
+                          <td class="py-3 px-4 text-secondary">4.2.1</td>
+                          <td class="py-3 px-4">1 min, qualquer hora</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Ovo Frito com Pão</td>
+                          <td class="py-3 px-4 text-secondary">1.3.4</td>
+                          <td class="py-3 px-4">5 min, proteico, simples</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Arroz com Feijão e Ovo Cozido</td>
+                          <td class="py-3 px-4 text-secondary">2.1.3</td>
+                          <td class="py-3 px-4">Brasileira, completa</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Linguiça Acebolada</td>
+                          <td class="py-3 px-4 text-secondary">2.2.7</td>
+                          <td class="py-3 px-4">Sabor, 8 min</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">6</td>
+                          <td class="py-3 px-4 font-medium">Batata Doce no Micro-ondas</td>
+                          <td class="py-3 px-4 text-secondary">1.2.6</td>
+                          <td class="py-3 px-4">3 min, carboidrato lento</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">7</td>
+                          <td class="py-3 px-4 font-medium">Cuscuz com Sardinha</td>
+                          <td class="py-3 px-4 text-secondary">2.1.6</td>
+                          <td class="py-3 px-4">Nordestina, 4 min</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">8</td>
+                          <td class="py-3 px-4 font-medium">Ovo Frito Pequeno</td>
+                          <td class="py-3 px-4 text-secondary">3.2.4</td>
+                          <td class="py-3 px-4">Noturno, 4 min</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">9</td>
+                          <td class="py-3 px-4 font-medium">Carne Moída Refogada</td>
+                          <td class="py-3 px-4 text-secondary">2.2.5</td>
+                          <td class="py-3 px-4">Base para várias refeições</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">10</td>
+                          <td class="py-3 px-4 font-medium">Arroz com Ovo e Cebolinha</td>
+                          <td class="py-3 px-4 text-secondary">2.2.10</td>
+                          <td class="py-3 px-4">Arroz chaufa, 7 min</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profile D -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Perfil D (Exaustão Máxima, Emergência Constante)</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Por que recomendar</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Banana Inteira</td>
+                          <td class="py-3 px-4 text-secondary">4.1.2</td>
+                          <td class="py-3 px-4">Zero, sempre</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Requeijão com Pão</td>
+                          <td class="py-3 px-4 text-secondary">3.2.3</td>
+                          <td class="py-3 px-4">1 min, noturno</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Atum na Lata</td>
+                          <td class="py-3 px-4 text-secondary">4.2.2</td>
+                          <td class="py-3 px-4">Proteína direta, 1 min</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Queijo em Fatia</td>
+                          <td class="py-3 px-4 text-secondary">4.1.4</td>
+                          <td class="py-3 px-4">Zero, mastiga</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Iogurte Natural</td>
+                          <td class="py-3 px-4 text-secondary">4.2.3</td>
+                          <td class="py-3 px-4">Pronto, probiótico</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">6</td>
+                          <td class="py-3 px-4 font-medium">Pão Seco</td>
+                          <td class="py-3 px-4 text-secondary">4.1.5</td>
+                          <td class="py-3 px-4">Zero, sempre disponível</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">7</td>
+                          <td class="py-3 px-4 font-medium">Manteiga no Pão</td>
+                          <td class="py-3 px-4 text-secondary">4.3.1</td>
+                          <td class="py-3 px-4">Gordura, saciedade</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">8</td>
+                          <td class="py-3 px-4 font-medium">Ovo Cozido (Pronto)</td>
+                          <td class="py-3 px-4 text-secondary">4.1.3</td>
+                          <td class="py-3 px-4">Proteína, se tiver deixado pronto</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">9</td>
+                          <td class="py-3 px-4 font-medium">Arroz com Manteiga</td>
+                          <td class="py-3 px-4 text-secondary">4.3.2</td>
+                          <td class="py-3 px-4">Sobra, 3 min</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">10</td>
+                          <td class="py-3 px-4 font-medium">Leite Quente com &#34;Película&#34;</td>
+                          <td class="py-3 px-4 text-secondary">4.1.1</td>
+                          <td class="py-3 px-4">Conforto, 5 min</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- By Failure Situation -->
+            <div class="mb-16">
+              <h3 class="font-serif text-2xl font-bold text-primary mb-8">Por Situação de Falha — 5 Receitas Melhores para Cada</h3>
+
+              <!-- Fome Noturna -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Fome Noturna</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Estratégia</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Banana com Mel</td>
+                          <td class="py-3 px-4 text-secondary">3.1.1</td>
+                          <td class="py-3 px-4">Doce natural, triptofano</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Ovo Cozido com Sal</td>
+                          <td class="py-3 px-4 text-secondary">3.2.1</td>
+                          <td class="py-3 px-4">Proteína, saciedade prolongada</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Queijo Quente na Frigideira</td>
+                          <td class="py-3 px-4 text-secondary">3.2.7</td>
+                          <td class="py-3 px-4">Prazer, sem carboidrato</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Iogurte com Mel e Canela</td>
+                          <td class="py-3 px-4 text-secondary">3.1.2</td>
+                          <td class="py-3 px-4">Caseína, sono melhor</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Água com Limão</td>
+                          <td class="py-3 px-4 text-secondary">3.3.1</td>
+                          <td class="py-3 px-4">Hidratação, &#34;fome fantasma&#34;</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Zero Energy -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Zero Energia</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Estratégia</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Tapioca Pronta com Requeijão</td>
+                          <td class="py-3 px-4 text-secondary">1.1.6</td>
+                          <td class="py-3 px-4">1 min, mastiga</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Requeijão com Pão</td>
+                          <td class="py-3 px-4 text-secondary">3.2.3</td>
+                          <td class="py-3 px-4">1 min, noturno</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Batata Doce no Micro-ondas</td>
+                          <td class="py-3 px-4 text-secondary">1.2.6</td>
+                          <td class="py-3 px-4">3 min, carboidrato lento</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Mingau de Aveia Expresso</td>
+                          <td class="py-3 px-4 text-secondary">1.2.3</td>
+                          <td class="py-3 px-4">Quente, conforto</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Couve Refogada com Alho</td>
+                          <td class="py-3 px-4 text-secondary">2.2.9</td>
+                          <td class="py-3 px-4">Verde, nutrientes</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Café Corrido -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Café Corrido</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Estratégia</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Ovo de Caneca</td>
+                          <td class="py-3 px-4 text-secondary">1.2.1</td>
+                          <td class="py-3 px-4">2 min, proteico, quente</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Tapioca Pronta com Requeijão</td>
+                          <td class="py-3 px-4 text-secondary">1.1.6</td>
+                          <td class="py-3 px-4">1 min, leva na mão</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Pão com Requeijão e Tomate</td>
+                          <td class="py-3 px-4 text-secondary">1.1.2</td>
+                          <td class="py-3 px-4">3 min, equilibrado</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Ovo Mexido Turbinado</td>
+                          <td class="py-3 px-4 text-secondary">1.3.1</td>
+                          <td class="py-3 px-4">5 min, saciedade</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Crepioca Rápida</td>
+                          <td class="py-3 px-4 text-secondary">1.3.5</td>
+                          <td class="py-3 px-4">7 min, proteico</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fim de Semana -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Fim de Semana</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Estratégia</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Panqueca de Banana</td>
+                          <td class="py-3 px-4 text-secondary">1.3.2</td>
+                          <td class="py-3 px-4">8 min, prazer matinal</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Bolo de Caneca de Banana</td>
+                          <td class="py-3 px-4 text-secondary">1.2.2</td>
+                          <td class="py-3 px-4">3 min, doce caseiro</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Pão na Chapa com Ovo</td>
+                          <td class="py-3 px-4 text-secondary">1.3.6</td>
+                          <td class="py-3 px-4">6 min, ritual</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Salada de Frango Desfiado</td>
+                          <td class="py-3 px-4 text-secondary">2.1.4</td>
+                          <td class="py-3 px-4">Refrescante, leve</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Maçã Assada no Micro-ondas</td>
+                          <td class="py-3 px-4 text-secondary">3.1.3</td>
+                          <td class="py-3 px-4">4 min, sobremesa quente</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Emergência -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Emergência</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Estratégia</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Banana Inteira</td>
+                          <td class="py-3 px-4 text-secondary">4.1.2</td>
+                          <td class="py-3 px-4">Zero, sempre</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Atum na Lata</td>
+                          <td class="py-3 px-4 text-secondary">4.2.2</td>
+                          <td class="py-3 px-4">Proteína, 1 min</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Queijo em Fatia</td>
+                          <td class="py-3 px-4 text-secondary">4.1.4</td>
+                          <td class="py-3 px-4">Zero, mastiga</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Requeijão no Pão</td>
+                          <td class="py-3 px-4 text-secondary">4.2.1</td>
+                          <td class="py-3 px-4">1 min, calórico</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Ovo Mexido no Micro-ondas</td>
+                          <td class="py-3 px-4 text-secondary">4.3.4</td>
+                          <td class="py-3 px-4">2 min, proteico</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Exaustão Total -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Exaustão Total</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Estratégia</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Iogurte Natural</td>
+                          <td class="py-3 px-4 text-secondary">4.2.3</td>
+                          <td class="py-3 px-4">Pronto, vivo</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Pão Seco</td>
+                          <td class="py-3 px-4 text-secondary">4.1.5</td>
+                          <td class="py-3 px-4">Zero, mastiga</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Manteiga no Pão</td>
+                          <td class="py-3 px-4 text-secondary">4.3.1</td>
+                          <td class="py-3 px-4">Gordura, energia</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Arroz com Manteiga</td>
+                          <td class="py-3 px-4 text-secondary">4.3.2</td>
+                          <td class="py-3 px-4">Sobra, 3 min</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Queijo Derretido no Micro-ondas</td>
+                          <td class="py-3 px-4 text-secondary">4.3.5</td>
+                          <td class="py-3 px-4">2 min, prazer</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sem Nada em Casa -->
+              <div class="mb-12">
+                <h4 class="font-bold text-primary text-xl mb-6">Sem Nada em Casa</h4>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left py-3 px-4 font-medium text-neutral">#</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Receita</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Código</th>
+                          <th class="text-left py-3 px-4 font-medium text-neutral">Estratégia</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">1</td>
+                          <td class="py-3 px-4 font-medium">Leite Quente com &#34;Película&#34;</td>
+                          <td class="py-3 px-4 text-secondary">4.1.1</td>
+                          <td class="py-3 px-4">5 min, proteína</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">2</td>
+                          <td class="py-3 px-4 font-medium">Aveia com Água</td>
+                          <td class="py-3 px-4 text-secondary">4.2.4</td>
+                          <td class="py-3 px-4">2 min, fibra</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">3</td>
+                          <td class="py-3 px-4 font-medium">Ovo Cozido (Pronto)</td>
+                          <td class="py-3 px-4 text-secondary">4.1.3</td>
+                          <td class="py-3 px-4">Se tiver deixado</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                          <td class="py-3 px-4">4</td>
+                          <td class="py-3 px-4 font-medium">Sardinha no Pão</td>
+                          <td class="py-3 px-4 text-secondary">4.2.5</td>
+                          <td class="py-3 px-4">2 min, ômega-3</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                          <td class="py-3 px-4">5</td>
+                          <td class="py-3 px-4 font-medium">Macarrão com Manteiga</td>
+                          <td class="py-3 px-4 text-secondary">4.3.3</td>
+                          <td class="py-3 px-4">Sobra, 3 min</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-primary text-white py-12">
+        <div class="container mx-auto px-8">
+          <div class="max-w-4xl mx-auto text-center">
+            <h3 class="font-serif text-2xl font-bold mb-4">Banco de Receitas &#34;Modo Automático 80/20&#34;</h3>
+            <p class="text-gray-300 mb-6">Alimentação prática e acessível para mulheres em exaustão</p>
+            <div class="flex justify-center gap-8 text-sm text-gray-400">
+              <span>80 receitas</span>
+              <span>4 perfis</span>
+              <span>7 situações</span>
+              <span>R$8-15 por refeição</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const toc = document.getElementById('toc');
+        
+        mobileMenuToggle.addEventListener('click', () => {
+            toc.classList.toggle('open');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!toc.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                toc.classList.remove('open');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    toc.classList.remove('open');
+                }
+            });
+        });
+
+        // Highlight active section in TOC
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('#toc a');
+
+        function highlightActiveSection() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('bg-secondary', 'text-white');
+                link.classList.add('text-neutral');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.remove('text-neutral');
+                    link.classList.add('bg-secondary', 'text-white');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', highlightActiveSection);
+        highlightActiveSection(); // Initial call
+    </script>
+  
+
+</body></html>

@@ -1,0 +1,1545 @@
+<!DOCTYPE html><html lang="pt-br"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Banco de Mensagens &#34;Modo Automático 80/20&#34; — Relatório Técnico Completo</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <style>
+        :root {
+            --primary: #2d3748;
+            --secondary: #4a5568;
+            --accent: #4299e1;
+            --warm-gray: #718096;
+            --soft-blue: #ebf8ff;
+            --muted-green: #f0fff4;
+            --light-gray: #f7fafc;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--primary);
+        }
+        
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--light-gray);
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 50;
+            padding: 2rem 1.5rem;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+        
+        .toc-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--warm-gray);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-link:hover {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(66, 153, 225, 0.05);
+        }
+        
+        .toc-link.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+        
+        .section-header {
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .message-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .message-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .message-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .citation {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted var(--accent);
+        }
+        
+        .citation:hover {
+            background: var(--soft-blue);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        .pullquote {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--secondary);
+            border-left: 4px solid var(--accent);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            background: var(--soft-blue);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .toc-fixed.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            body {
+                overflow-x: hidden;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-gradient h1 {
+                font-size: 2.5rem;
+            }
+            .hero-gradient h1 em {
+                font-size: 1.75rem;
+            }
+            .hero-gradient p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+  <base target="_blank">
+</head>
+
+  <body class="bg-gray-50">
+    <!-- Mobile TOC Toggle -->
+    <button id="toc-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-white p-3 rounded-lg shadow-lg">
+      <i class="fas fa-bars text-gray-700"></i>
+    </button>
+
+    <!-- Table of Contents -->
+    <nav id="toc" class="toc-fixed">
+      <div class="mb-6">
+        <h3 class="serif text-lg font-semibold text-gray-800 mb-4">Índice de Conteúdo</h3>
+      </div>
+
+      <div class="space-y-2 text-sm">
+        <a href="#hero" class="toc-link">Capa e Resumo</a>
+        <a href="#fundamentos" class="toc-link">1. Fundamentos do Sistema</a>
+        <a href="#copywriting" class="toc-link text-xs ml-4">1.1 Princípios de Copywriting</a>
+        <a href="#regra-80-20" class="toc-link text-xs ml-4">1.2 Regra 80/20</a>
+        <a href="#arquitetura" class="toc-link text-xs ml-4">1.3 Arquitetura Técnica</a>
+        <a href="#tipo-1" class="toc-link">2. Tipo 1 — Ativação Diária</a>
+        <a href="#tipo-2" class="toc-link">3. Tipo 2 — Resposta &#34;FIZ&#34;</a>
+        <a href="#tipo-3" class="toc-link">4. Tipo 3 — Resposta &#34;NÃO CONSEGUI&#34;</a>
+        <a href="#tipo-4" class="toc-link">5. Tipo 4 — Reengajamento</a>
+        <a href="#tipo-5" class="toc-link">6. Tipo 5 — Marcos de Streak</a>
+        <a href="#tipo-6" class="toc-link">7. Tipo 6 — Upsell Contextual</a>
+        <a href="#tipo-7" class="toc-link">8. Tipo 7 — Onboarding</a>
+        <a href="#tipo-8" class="toc-link">9. Tipo 8 — Situações Especiais</a>
+        <a href="#controles" class="toc-link">10. Controles de Qualidade</a>
+        <a href="#inventario" class="toc-link">11. Inventário Consolidado</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section id="hero" class="hero-gradient text-white relative">
+        <div class="container mx-auto px-4 md:px-8 py-16 relative z-10">
+          <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 class="serif text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                <em class="text-4xl lg:text-5xl font-light block mb-2">Banco de Mensagens</em>
+                &#34;Modo Automático 80/20&#34;
+              </h1>
+              <p class="text-xl lg:text-2xl font-light mb-8 opacity-90">
+                Sistema completo de comunicação para coaching nutricional via WhatsApp
+              </p>
+              <div class="flex flex-wrap gap-4 text-sm">
+                <span class="bg-white bg-opacity-20 px-4 py-2 rounded-full">173 mensagens únicas</span>
+                <span class="bg-white bg-opacity-20 px-4 py-2 rounded-full">8 tipos estratégicos</span>
+                <span class="bg-white bg-opacity-20 px-4 py-2 rounded-full">Tom conversacional autêntico</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6 border border-white border-opacity-20">
+                <i class="fas fa-mobile-alt text-3xl mb-4"></i>
+                <h3 class="font-semibold mb-2">Canal Único</h3>
+                <p class="text-sm opacity-90">WhatsApp como plataforma exclusiva</p>
+              </div>
+              <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6 border border-white border-opacity-20">
+                <i class="fas fa-heart text-3xl mb-4"></i>
+                <h3 class="font-semibold mb-2">Sem Julgamento</h3>
+                <p class="text-sm opacity-90">Acolhimento em todas as situações</p>
+              </div>
+              <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6 border border-white border-opacity-20">
+                <i class="fas fa-users text-3xl mb-4"></i>
+                <h3 class="font-semibold mb-2">Tom de Amiga</h3>
+                <p class="text-sm opacity-90">Especialista descontraída em nutrição</p>
+              </div>
+              <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6 border border-white border-opacity-20">
+                <i class="fas fa-chart-line text-3xl mb-4"></i>
+                <h3 class="font-semibold mb-2">Baseado em Evidências</h3>
+                <p class="text-sm opacity-90">Robusta pesquisa científica</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section class="bg-white py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-4xl mx-auto">
+            <h2 class="serif text-3xl font-bold mb-8 text-center">Resumo Executivo</h2>
+
+            <div class="prose prose-lg max-w-none">
+              <p class="text-xl text-gray-700 mb-8 font-light">
+                O banco de mensagens &#34;Modo Automático 80/20&#34; representa uma abordagem revolucionária em intervenções digitais de saúde, combinando a precisão de sistemas automatizados com a calidez humana essencial para mudanças comportamentais sustentáveis.
+              </p>
+
+              <div class="grid md:grid-cols-3 gap-8 my-12">
+                <div class="text-center">
+                  <div class="text-4xl font-bold text-blue-600 mb-2">173</div>
+                  <div class="text-sm text-gray-600">Mensagens Únicas</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-4xl font-bold text-green-600 mb-2">8</div>
+                  <div class="text-sm text-gray-600">Tipos Estratégicos</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-4xl font-bold text-purple-600 mb-2">3</div>
+                  <div class="text-sm text-gray-600">Linhas Máximo</div>
+                </div>
+              </div>
+
+              <div class="pullquote">
+                &#34;Pesquisas demonstram que mensagens de IA refinadas para incorporar empatia, humor e evitar repetitividade receberam avaliações de utilidade equivalentes às de profissionais humanos.&#34;
+              </div>
+
+              <p>
+                O sistema foi desenvolvido para mulheres que desejam emagrecer sem dietas radicais, utilizando o WhatsApp como canal único. A abordagem baseia-se na <a href="https://www.psypost.org/ai-chatbots-generate-weight-loss-coaching-messages-perceived-as-helpful-as-human-written-advice/" class="citation">pesquisa que mostra 82% das mensagens geradas por IA obtendo nota 3+ em escala de 5 pontos</a>, comparável a coaches humanos experientes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Fundamentos do Sistema -->
+      <section id="fundamentos" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">1. Fundamentos do Sistema de Mensagens</h2>
+            </div>
+
+            <div id="copywriting" class="mb-16">
+              <h3 class="serif text-2xl font-semibold mb-8 text-gray-800">1.1 Princípios de Copywriting Conversacional</h3>
+
+              <div class="bg-white rounded-lg p-8 shadow-sm mb-8">
+                <h4 class="text-xl font-semibold mb-4 text-blue-600">1.1.1 Tom de Voz: Amiga Especialista em Nutrição</h4>
+                <p class="mb-4">
+                  A construção do tom de voz opera um paradoxo deliberado: <strong>simultaneamente transmitir competência técnica em nutrição e proximidade afetiva de uma amiga íntima</strong>. Esta dualidade responde a uma lacuna identificada na literatura sobre chatbots de saúde.
+                </p>
+
+                <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                  <p class="font-medium text-blue-800 mb-2">Características Linguísticas:</p>
+                  <ul class="list-disc list-inside space-y-1 text-gray-700">
+                    <li>Coloquialismo brasileiro autêntico (&#34;marmita&#34;, &#34;rolê&#34;, &#34;correria&#34;)</li>
+                    <li>Precisão comportamental sem julgamento</li>
+                    <li>Propostas no formato &#34;que tal&#34; rather than &#34;não pode&#34;</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-8 shadow-sm mb-8">
+                <h4 class="text-xl font-semibold mb-4 text-red-600">1.1.2 Restrições Absolutas de Linguagem</h4>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                  <div class="border border-red-200 rounded-lg p-4">
+                    <h5 class="font-semibold text-red-700 mb-2">Proibição de Motivação Exagerada</h5>
+                    <p class="text-sm text-gray-600">Evita &#34;você consegue!&#34;, &#34;acredite em si mesma!&#34; que ativam regulação externa introjetada.</p>
+                  </div>
+                  <div class="border border-red-200 rounded-lg p-4">
+                    <h5 class="font-semibold text-red-700 mb-2">Ausência de Julgamento e Culpa</h5>
+                    <p class="text-sm text-gray-600">Não há avaliação do que foi comido, comparação com metas ou caracterização de dias &#34;bons&#34; ou &#34;ruins&#34;.</p>
+                  </div>
+                  <div class="border border-red-200 rounded-lg p-4">
+                    <h5 class="font-semibold text-red-700 mb-2">Limite de Emojis</h5>
+                    <p class="text-sm text-gray-600">Máximo 1 por mensagem, nenhum emoji repetido mais de 3 vezes no banco.</p>
+                  </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                  <p class="text-sm">
+                    <strong>Alerta:</strong> O chatbot <a href="https://globalnews.ca/news/9739041/eating-disorder-chatbot-neda-tessa-diet-tips/" class="citation">&#34;Tessa&#34;, suspenso pela NEDA</a>, forneceu conselhos de restrição calórica severa a pessoas com transtornos alimentares, evidenciando os riscos de sistemas mal calibrados.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div id="regra-80-20" class="mb-16">
+              <h3 class="serif text-2xl font-semibold mb-8 text-gray-800">1.2 Base Comportamental: Regra 80/20 Aplicada à Nutrição</h3>
+
+              <div class="bg-white rounded-lg p-8 shadow-sm mb-8">
+                <h4 class="text-xl font-semibold mb-4 text-green-600">1.2.1 Conceito de Laura Romero: 80% Nutrição Consciente, 20% Flexibilidade</h4>
+
+                <p class="mb-4">
+                  O método 80/20 opera como <strong>heurística de decisão em tempo real</strong>: 80% das escolhas alimentares orientam-se por critérios de saciedade, nutrientes e energia sustentada; 20% são livres de qualquer critério nutricional.
+                </p>
+
+                <div class="bg-green-50 p-6 rounded-lg">
+                  <div class="flex items-center mb-4">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">80%</div>
+                    <div>
+                      <h5 class="font-semibold text-green-800">Nutrição Consciente</h5>
+                      <p class="text-sm text-green-700">Escolhas baseadas em saciedade, nutrientes, energia sustentada</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center">
+                    <div class="w-16 h-16 bg-green-300 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">20%</div>
+                    <div>
+                      <h5 class="font-semibold text-green-800">Flexibilidade</h5>
+                      <p class="text-sm text-green-700">Sem critérios nutricionais, autorregulação natural</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pullquote">
+                &#34;A autorregulação é o objetivo terminal, não apenas meio para perda de peso. O sistema estrutura-se para tornar-se progressivamente desnecessário.&#34;
+              </div>
+            </div>
+
+            <div id="arquitetura" class="mb-16">
+              <h3 class="serif text-2xl font-semibold mb-8 text-gray-800">1.3 Arquitetura Técnica do Sistema</h3>
+
+              <div class="bg-white rounded-lg p-8 shadow-sm">
+                <div class="grid md:grid-cols-2 gap-8">
+                  <div>
+                    <h4 class="text-xl font-semibold mb-4 text-purple-600">Canal Único: WhatsApp</h4>
+                    <p class="mb-4">
+                      <strong>98% dos brasileiros adultos com acesso à internet utilizam o aplicativo</strong>, com média de 3 horas diárias de uso.
+                    </p>
+                    <ul class="text-sm space-y-2 text-gray-600">
+                      <li>• Entrega garantida com confirmação de leitura</li>
+                      <li>• Interatividade bidirecional</li>
+                      <li>• Integração natural à rotina</li>
+                      <li>• Consistência de experiência</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 class="text-xl font-semibold mb-4 text-blue-600">Gatilhos de Envio</h4>
+                    <div class="space-y-4">
+                      <div class="border-l-4 border-blue-400 pl-4">
+                        <h5 class="font-semibold">Automático</h5>
+                        <p class="text-sm text-gray-600">Agendamento baseado em perfil de horário da usuária</p>
+                      </div>
+                      <div class="border-l-4 border-green-400 pl-4">
+                        <h5 class="font-semibold">Manual</h5>
+                        <p class="text-sm text-gray-600">Disparo por operador humano em momentos estratégicos</p>
+                      </div>
+                      <div class="border-l-4 border-purple-400 pl-4">
+                        <h5 class="font-semibold">Por Keyword</h5>
+                        <p class="text-sm text-gray-600">Resposta imediata a entrada específica da usuária</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipo 1: Ativação Diária -->
+      <section id="tipo-1" class="bg-white py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">2. Tipo 1 — Ativação Diária (35 Mensagens)</h2>
+              <p class="text-xl text-gray-600 mt-4">O núcleo operacional do sistema: estrutura tripartite validada em estudos de coaching de peso</p>
+            </div>
+
+            <div class="bg-blue-50 rounded-lg p-8 mb-12">
+              <h3 class="text-xl font-semibold mb-4 text-blue-800">Estrutura Obrigatória</h3>
+              <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">1</div>
+                  <h4 class="font-semibold mb-2">Contexto da Situação</h4>
+                  <p class="text-sm text-gray-600">Ancoragem situacional, ativação de memória episódica</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">2</div>
+                  <h4 class="font-semibold mb-2">Decisão do Dia</h4>
+                  <p class="text-sm text-gray-600">Instrução acionável, formulada como escolha ativa</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">3</div>
+                  <h4 class="font-semibold mb-2">Call-to-Action</h4>
+                  <p class="text-sm text-gray-600">Ritual de fechamento, confirmação de intenção</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+              <div>
+                <h3 class="serif text-2xl font-semibold mb-6 text-gray-800">Variações por Situação</h3>
+
+                <div class="space-y-6">
+                  <div class="message-card">
+                    <h4 class="font-semibold text-lg mb-3 text-green-700">Ambiente de Trabalho</h4>
+                    <div class="space-y-2 text-sm">
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-001:</strong> &#34;Café na correria? Pega uma fruta antes de sair. Feito? Manda FIZ.&#34;
+                      </div>
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-002:</strong> &#34;Reunião que estica? Bebe um copo d&#39;água antes do almoço. Feito? Manda FIZ.&#34;
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="message-card">
+                    <h4 class="font-semibold text-lg mb-3 text-purple-700">Convívio Familiar</h4>
+                    <div class="space-y-2 text-sm">
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-006:</strong> &#34;Jantar em família? Serve vegetais primeiro no prato. Feito? Manda FIZ.&#34;
+                      </div>
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-010:</strong> &#34;Domingo de preguiça? Faz uma refeição com atenção plena. Feito? Manda FIZ.&#34;
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="message-card">
+                    <h4 class="font-semibold text-lg mb-3 text-blue-700">Eventos Sociais</h4>
+                    <div class="space-y-2 text-sm">
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-011:</strong> &#34;Festa hoje? Come algo leve antes de sair de casa. Feito? Manda FIZ.&#34;
+                      </div>
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-013:</strong> &#34;Noite com as amigas? Come devagar e conversa entre garfadas. Feito? Manda FIZ.&#34;
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="space-y-6">
+                  <div class="message-card">
+                    <h4 class="font-semibold text-lg mb-3 text-red-700">Momento Solo em Casa</h4>
+                    <div class="space-y-2 text-sm">
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-016:</strong> &#34;Noite de sofá? Prepara um chá antes de abrir a geladeira. Feito? Manda FIZ.&#34;
+                      </div>
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-019:</strong> &#34;Sozinha em casa? Pergunta se é fome ou tédio antes de comer. Feito? Manda FIZ.&#34;
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="message-card">
+                    <h4 class="font-semibold text-lg mb-3 text-yellow-700">Estados Emocionais</h4>
+                    <div class="space-y-2 text-sm">
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-021:</strong> &#34;Dia difícil? Faz 5 respirações antes do almoço. Feito? Manda FIZ.&#34;
+                      </div>
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-024:</strong> &#34;Ansiedade à tona? Come sentada, sem fazer outra coisa. Feito? Manda FIZ.&#34;
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="message-card">
+                    <h4 class="font-semibold text-lg mb-3 text-indigo-700">Decisões de Saúde Ativas</h4>
+                    <div class="space-y-2 text-sm">
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-031:</strong> &#34;Ida ao mercado? Não vai com fome. Feito? Manda FIZ.&#34;
+                      </div>
+                      <div class="bg-gray-50 p-3 rounded">
+                        <strong>ATIVA-034:</strong> &#34;Lembrete de água? Bebe um copo agora, antes de qualquer coisa. Feito? Manda FIZ.&#34;
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipo 2: Resposta "FIZ" -->
+      <section id="tipo-2" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">3. Tipo 2 — Resposta &#34;FIZ&#34; (30 Mensagens)</h2>
+              <p class="text-xl text-gray-600 mt-4">Estruturado em três categorias: neutras, reforço de identidade e micro-dicas</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 mb-12">
+              <div class="bg-white rounded-lg p-6 shadow-sm">
+                <h3 class="text-xl font-semibold mb-4 text-green-600">Categoria A: Neutras</h3>
+                <p class="text-sm text-gray-600 mb-4">Confirmação sem carga emocional que evita frieza do sistema automatizado e pressão do elogio constante.</p>
+
+                <div class="space-y-3">
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-001:</strong> &#34;Anotado. Até amanhã.&#34;
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-002:</strong> &#34;Visto. Seguimos.&#34;
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-003:</strong> &#34;Ok. Próxima decisão vem amanhã.&#34;
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-6 shadow-sm">
+                <h3 class="text-xl font-semibold mb-4 text-blue-600">Categoria B: Reforço de Identidade</h3>
+                <p class="text-sm text-gray-600 mb-4">Atribuição de traço que constrói autoconceito estável ao caracterizar padrões comportamentais observáveis.</p>
+
+                <div class="space-y-3">
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-011:</strong> &#34;Você é do tipo que faz. Isso é raro.&#34;
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-014:</strong> &#34;Mulher que decide, mulher que executa.&#34;
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-018:</strong> &#34;Padrão seu: escolhe e faz.&#34;
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-6 shadow-sm">
+                <h3 class="text-xl font-semibold mb-4 text-purple-600">Categoria C: Micro-Dicas</h3>
+                <p class="text-sm text-gray-600 mb-4">Antecipação de contexto provável com preparação leve, criando continuidade entre decisões.</p>
+
+                <div class="space-y-3">
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-021:</strong> &#34;Amanhã: se for dia corrido, prepara algo na véspera.&#34;
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-026:</strong> &#34;Prepara: deixa a fruta na bolsa para amanhã.&#34;
+                  </div>
+                  <div class="bg-gray-50 p-3 rounded text-sm">
+                    <strong>FIZ-029:</strong> &#34;Olha: seu corpo responde à consistência, não à perfeição.&#34;
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pullquote">
+              &#34;O reforço de identidade foca em padrões comportamentais observáveis (&#39;você é do tipo que faz&#39;) rather than potencial genérico, construindo autoconceito mais estável.&#34;
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipo 3: Resposta "NÃO CONSEGUI" -->
+      <section id="tipo-3" class="bg-white py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">4. Tipo 3 — Resposta &#34;NÃO CONSEGUI&#34; (30 Mensagens)</h2>
+              <p class="text-xl text-gray-600 mt-4">Onde o sistema mais claramente se diferencia de abordagens tradicionais</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+              <div class="message-card">
+                <h3 class="text-xl font-semibold mb-4 text-yellow-600">Acolhimento sem Drama</h3>
+                <p class="text-sm text-gray-600 mb-4">Proibição de &#34;tudo bem&#34; como abertura força criatividade na validação da experiência.</p>
+
+                <div class="space-y-2">
+                  <div class="bg-yellow-50 p-3 rounded text-sm">
+                    <strong>NAO-001:</strong> &#34;Acontece. Amanhã tem outra decisão.&#34;
+                  </div>
+                  <div class="bg-yellow-50 p-3 rounded text-sm">
+                    <strong>NAO-003:</strong> &#34;Entendido. O sistema é para os dias bons e ruins.&#34;
+                  </div>
+                  <div class="bg-yellow-50 p-3 rounded text-sm">
+                    <strong>NAO-007:</strong> &#34;Feito. Dizer que não conseguiu também é participar.&#34;
+                  </div>
+                </div>
+              </div>
+
+              <div class="message-card">
+                <h3 class="text-xl font-semibold mb-4 text-green-600">Alternativa Imediata</h3>
+                <p class="text-sm text-gray-600 mb-4">&#34;Escada de fuga&#34; comportamental com versão reduzida da ação original.</p>
+
+                <div class="space-y-2">
+                  <div class="bg-green-50 p-3 rounded text-sm">
+                    <strong>NAO-011:</strong> &#34;Então faz isso: bebe um copo d&#39;água agora.&#34;
+                  </div>
+                  <div class="bg-green-50 p-3 rounded text-sm">
+                    <strong>NAO-014:</strong> &#34;Simplifica: próxima refeição, come mais devagar.&#34;
+                  </div>
+                  <div class="bg-green-50 p-3 rounded text-sm">
+                    <strong>NAO-018:</strong> &#34;Substitui: troca a ação por uma pergunta para si mesma.&#34;
+                  </div>
+                </div>
+              </div>
+
+              <div class="message-card">
+                <h3 class="text-xl font-semibold mb-4 text-blue-600">Ressignificação</h3>
+                <p class="text-sm text-gray-600 mb-4">Transforma &#34;fracasso&#34; em informação de autoconhecimento, prevenindo espiral de autocrítica.</p>
+
+                <div class="space-y-2">
+                  <div class="bg-blue-50 p-3 rounded text-sm">
+                    <strong>NAO-021:</strong> &#34;Não conseguir é dado: o que te impediu hoje?&#34;
+                  </div>
+                  <div class="bg-blue-50 p-3 rounded text-sm">
+                    <strong>NAO-024:</strong> &#34;Útil saber: em que momento a coisa desandou?&#34;
+                  </div>
+                  <div class="bg-blue-50 p-3 rounded text-sm">
+                    <strong>NAO-028:</strong> &#34;Insight: padrões se revelam nos dois lados.&#34;
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-12 p-6 bg-blue-50 rounded-lg">
+              <h4 class="text-lg font-semibold mb-4 text-blue-800">Princípio Fundamental</h4>
+              <p>
+                Em nenhum momento o sistema solicita explicação, justificativa ou promessa de compensação futura. A ausência de culpa é particularmente crítica considerando o <a href="https://simple.life/blog/ai-health-coach-supports-weight-loss/" class="citation">histórico de dietas radicais do público-alvo</a>, que tipicamente carrega experiências acumuladas de fracasso atribuído à própria falta de força de vontade.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipo 4: Reengajamento -->
+      <section id="tipo-4" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">5. Tipo 4 — Reengajamento por Inatividade (21 Mensagens)</h2>
+              <p class="text-xl text-gray-600 mt-4">Progressão de três dias com intensidade emocional crescente de forma sutil</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+              <div class="bg-white rounded-lg p-6 shadow-sm">
+                <div class="flex items-center mb-4">
+                  <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">1</div>
+                  <h3 class="text-xl font-semibold text-green-700">Dia 1: Leve, sem Pressão</h3>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="bg-green-50 p-3 rounded text-sm">
+                    <strong>REAT-001:</strong> &#34;Ontem não rolou. Hoje tem decisão nova.&#34;
+                  </div>
+                  <div class="bg-green-50 p-3 rounded text-sm">
+                    <strong>REAT-003:</strong> &#34;Sua decisão de ontem ficou no ar. Sem problema.&#34;
+                  </div>
+                  <div class="bg-green-50 p-3 rounded text-sm">
+                    <strong>REAT-005:</strong> &#34;Sem pressão. Quando der, você responde.&#34;
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-6 shadow-sm">
+                <div class="flex items-center mb-4">
+                  <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold mr-4">2</div>
+                  <h3 class="text-xl font-semibold text-yellow-700">Dia 2: Humana, Curiosa</h3>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="bg-yellow-50 p-3 rounded text-sm">
+                    <strong>REAT-008:</strong> &#34;Dois dias sem notícias. Tudo certo por aí?&#34;
+                  </div>
+                  <div class="bg-yellow-50 p-3 rounded text-sm">
+                    <strong>REAT-010:</strong> &#34;Sua rotina mudou? Posso ajustar o horário.&#34;
+                  </div>
+                  <div class="bg-yellow-50 p-3 rounded text-sm">
+                    <strong>REAT-012:</strong> &#34;Dois dias. Curiosa para saber como você está.&#34;
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-6 shadow-sm">
+                <div class="flex items-center mb-4">
+                  <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold mr-4">3</div>
+                  <h3 class="text-xl font-semibold text-red-700">Dia 3: Última Tentativa</h3>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="bg-red-50 p-3 rounded text-sm">
+                    <strong>REAT-015:</strong> &#34;Três dias. Talvez esse não seja o momento ideal.&#34;
+                  </div>
+                  <div class="bg-red-50 p-3 rounded text-sm">
+                    <strong>REAT-017:</strong> &#34;Pausa aqui. A porta fica aberta quando você quiser.&#34;
+                  </div>
+                  <div class="bg-red-50 p-3 rounded text-sm">
+                    <strong>REAT-020:</strong> &#34;Última mensagem por enquanto. Te espero quando for hora.&#34;
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-12 p-6 bg-yellow-50 rounded-lg">
+              <p class="text-sm">
+                <strong>Nota técnica:</strong> Pesquisas revelam que a redução automática da frequência de solicitações de resposta quando o usuário não responde <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2729073/" class="citation">minimiza a irritação e preserva a relação</a>, permitindo retorno futuro.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipo 5: Marcos de Streak -->
+      <section id="tipo-5" class="bg-white py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">6. Tipo 5 — Marcos de Streak (20 Mensagens)</h2>
+              <p class="text-xl text-gray-600 mt-4">Celebração realista da consistência acumulada com nítida sensação de progresso</p>
+            </div>
+
+            <div class="grid lg:grid-cols-5 gap-6">
+              <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 text-center">
+                <div class="text-3xl font-bold text-green-600 mb-2">3</div>
+                <h3 class="font-semibold text-green-800 mb-3">Dias</h3>
+                <div class="space-y-2 text-sm">
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Três dias. Começou um padrão.&#34;</div>
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Terceiro dia. Isso já é diferente.&#34;</div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 text-center">
+                <div class="text-3xl font-bold text-blue-600 mb-2">7</div>
+                <h3 class="font-semibold text-blue-800 mb-3">Dias</h3>
+                <div class="space-y-2 text-sm">
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Uma semana. Primeira linha cruzada. ✓&#34;</div>
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Sete dias. Seu novo normal está nascendo.&#34;</div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 text-center">
+                <div class="text-3xl font-bold text-purple-600 mb-2">14</div>
+                <h3 class="font-semibold text-purple-800 mb-3">Dias</h3>
+                <div class="space-y-2 text-sm">
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Duas semanas. Isso já é diferente das outras vezes.&#34;</div>
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Quatorze dias. Você está construindo de verdade.&#34;</div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-6 text-center">
+                <div class="text-3xl font-bold text-indigo-600 mb-2">21</div>
+                <h3 class="font-semibold text-indigo-800 mb-3">Dias</h3>
+                <div class="space-y-2 text-sm">
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Três semanas. Transformação em andamento.&#34;</div>
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Vinte e um dias. Você virou a página.&#34;</div>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-6 text-center">
+                <div class="text-3xl font-bold text-yellow-600 mb-2">30</div>
+                <h3 class="font-semibold text-yellow-800 mb-3">Dias</h3>
+                <div class="space-y-2 text-sm">
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Um mês. Nova realidade estabelecida. 🎯&#34;</div>
+                  <div class="bg-white bg-opacity-70 p-2 rounded">&#34;Trinta dias. Você cruzou uma linha real.&#34;</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-12 p-6 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg">
+              <p class="text-lg font-medium text-gray-800 mb-4">Correlação Dose-Resposta</p>
+              <p class="text-gray-700">
+                Análise de 23.445 usuários do chatbot &#34;Avo&#34; estabeleceu correlação clara: usuários com 30+ dias de interação alcançaram <a href="https://simple.life/blog/ai-health-coach-supports-weight-loss/" class="citation">6,1% de redução de peso</a>, contra 2,9% para 1-4 dias de interação. Cada 10 dias adicionais adicionavam 0,17% à perda de peso.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipo 6: Upsell Contextual -->
+      <section id="tipo-6" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">7. Tipo 6 — Upsell Contextual (12 Mensagens)</h2>
+              <p class="text-xl text-gray-600 mt-4">Propostas de valor que parecem consequência natural do comportamento</p>
+            </div>
+
+            <div class="space-y-12">
+              <div class="bg-white rounded-lg p-8 shadow-sm">
+                <h3 class="text-xl font-semibold mb-6 text-blue-600">Após 10 &#34;FIZ&#34; — Plano Completo 7 Decisões</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div class="message-card">
+                    <div class="bg-blue-50 p-4 rounded">
+                      <strong>UPSELL-001:</strong> &#34;Dez decisões seguidas. Você está pronta para mais?&#34;
+                    </div>
+                  </div>
+                  <div class="message-card">
+                    <div class="bg-blue-50 p-4 rounded">
+                      <strong>UPSELL-004:</strong> &#34;Plano completo: café, almoço, lanche, jantar, mais três. Interessada?&#34;
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-8 shadow-sm">
+                <h3 class="text-xl font-semibold mb-6 text-green-600">Após 20 &#34;FIZ&#34; — Plano Premium/PWA</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div class="message-card">
+                    <div class="bg-green-50 p-4 rounded">
+                      <strong>UPSELL-005:</strong> &#34;Vinte decisões. Você evoluiu para o próximo nível.&#34;
+                    </div>
+                  </div>
+                  <div class="message-card">
+                    <div class="bg-green-50 p-4 rounded">
+                      <strong>UPSELL-007:</strong> &#34;Vinte vezes você mostrou compromisso. Que tal a versão completa?&#34;
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-8 shadow-sm">
+                <h3 class="text-xl font-semibold mb-6 text-purple-600">Após 25 &#34;FIZ&#34; — Recorrência Mensal</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div class="message-card">
+                    <div class="bg-purple-50 p-4 rounded">
+                      <strong>UPSELL-009:</strong> &#34;Vinte e cinco. Seu hábito está formado. Vamos manter juntas?&#34;
+                    </div>
+                  </div>
+                  <div class="message-card">
+                    <div class="bg-purple-50 p-4 rounded">
+                      <strong>UPSELL-012:</strong> &#34;Recorrência: menos preocupação, mais consistência. Topa?&#34;
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipo 7: Onboarding -->
+      <section id="tipo-7" class="bg-white py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">8. Tipo 7 — Onboarding Conversacional (10 Mensagens)</h2>
+              <p class="text-xl text-gray-600 mt-4">Cinco perguntas estratégicas em formato WhatsApp natural</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+              <div>
+                <h3 class="serif text-2xl font-semibold mb-6 text-gray-800">Mensagens de Boas-Vindas</h3>
+
+                <div class="space-y-4 mb-8">
+                  <div class="bg-blue-50 p-4 rounded-lg">
+                    <strong>ONB-001:</strong> &#34;Bem-vinda ao Modo Automático 80/20. Uma decisão por dia, sem dieta radical. Vamos começar?&#34;
+                  </div>
+                  <div class="bg-blue-50 p-4 rounded-lg">
+                    <strong>ONB-002:</strong> &#34;Oi! Aqui a gente faz diferente: 80% atenção, 20% flexibilidade. Uma decisão de cada vez. Pronta?&#34;
+                  </div>
+                </div>
+
+                <h3 class="serif text-2xl font-semibold mb-6 text-gray-800">Cinco Perguntas de Onboarding</h3>
+
+                <div class="space-y-4">
+                  <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                    <h4 class="font-semibold mb-2 text-gray-800">1. Rotina</h4>
+                    <p class="text-sm text-gray-600 mb-3">&#34;Como é sua rotina? (A) Previsível, (B) Variável, (C) Caótica, (D) Estruturada. Responde com a letra.&#34;</p>
+                  </div>
+
+                  <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                    <h4 class="font-semibold mb-2 text-gray-800">2. Desafios</h4>
+                    <p class="text-sm text-gray-600 mb-3">&#34;O que mais te atrapalha? (A) Falta de tempo, (B) Ansiedade, (C) Família/social, (D) Não sei por onde começar.&#34;</p>
+                  </div>
+
+                  <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                    <h4 class="font-semibold mb-2 text-gray-800">3. Histórico</h4>
+                    <p class="text-sm text-gray-600 mb-3">&#34;Já tentou dieta antes? (A) Nunca, (B) Algumas vezes, (C) Muitas vezes, (D) Perdi as contas.&#34;</p>
+                  </div>
+
+                  <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                    <h4 class="font-semibold mb-2 text-gray-800">4. Motivação</h4>
+                    <p class="text-sm text-gray-600 mb-3">&#34;O que te move agora? (A) Saúde, (B) Estética, (C) Bem-estar, (D) Controle.&#34;</p>
+                  </div>
+
+                  <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-sm">
+                    <h4 class="font-semibold mb-2 text-gray-800">5. Horário</h4>
+                    <p class="text-sm text-gray-600 mb-3">&#34;Que horário funciona? (A) Manhã, (B) Meio-dia, (C) Noite, (D) Varia.&#34;</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="serif text-2xl font-semibold mb-6 text-gray-800">Confirmação de Perfil</h3>
+
+                <div class="space-y-4">
+                  <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-green-800">Perfil A — Previsível</h4>
+                    <p class="text-sm text-green-700">&#34;Perfil A: sua rotina é aliada. Vou mandar decisões no horário que você escolheu.&#34;</p>
+                  </div>
+
+                  <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-blue-800">Perfil B — Variável</h4>
+                    <p class="text-sm text-blue-700">&#34;Perfil B: flexibilidade é sua palavra. Ajusto as decisões conforme seu dia.&#34;</p>
+                  </div>
+
+                  <div class="bg-purple-50 border border-purple-200 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-purple-800">Perfil C — Caótica</h4>
+                    <p class="text-sm text-purple-700">&#34;Perfil C: sem pressão, sem culpa. Aqui você pode errar que é parte do processo.&#34;</p>
+                  </div>
+
+                  <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-indigo-800">Perfil D — Estruturada</h4>
+                    <p class="text-sm text-indigo-700">&#34;Perfil D: você gosta de entender o porquê. Explico o método por trás de cada decisão.&#34;</p>
+                  </div>
+                </div>
+
+                <div class="mt-8 p-6 bg-yellow-50 rounded-lg">
+                  <h4 class="font-semibold mb-3 text-yellow-800">Benefícios do Perfilamento</h4>
+                  <ul class="text-sm text-yellow-700 space-y-1">
+                    <li>• Personalização da experiência de usuário</li>
+                    <li>• Ajuste automático do tom e conteúdo</li>
+                    <li>• Melhoria da retenção e engajamento</li>
+                    <li>• Prevenção de abordagens inadequadas</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tipo 8: Situações Especiais -->
+      <section id="tipo-8" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">9. Tipo 8 — Situações Especiais (15 Mensagens)</h2>
+              <p class="text-xl text-gray-600 mt-4">Comportamentos fora do padrão com respostas contextualizadas</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+              <div class="space-y-6">
+                <div class="message-card">
+                  <h3 class="text-lg font-semibold mb-3 text-red-600">Texto Aleatório Não Reconhecido</h3>
+                  <div class="space-y-2 text-sm">
+                    <div class="bg-red-50 p-3 rounded">
+                      <strong>ESP-001:</strong> &#34;Não entendi direito. Pode mandar &#39;FIZ&#39; se fez, ou &#39;NÃO CONSEGUI&#39; se não rolou?&#34;
+                    </div>
+                    <div class="bg-red-50 p-3 rounded">
+                      <strong>ESP-003:</strong> &#34;Sistema simples: recebe decisão, faz, manda &#39;FIZ&#39;. Não fez, manda &#39;NÃO CONSEGUI&#39;.&#34;
+                    </div>
+                  </div>
+                </div>
+
+                <div class="message-card">
+                  <h3 class="text-lg font-semibold mb-3 text-blue-600">Pedido de Pausa</h3>
+                  <div class="space-y-2 text-sm">
+                    <div class="bg-blue-50 p-3 rounded">
+                      <strong>ESP-004:</strong> &#34;Entendido. Pausa aqui. Quando quiser voltar, é só mandar &#39;VOLTEI&#39;.&#34;
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded">
+                      <strong>ESP-006:</strong> &#34;Ok, pausado. Sua decisão de voltar é só sua.&#34;
+                    </div>
+                  </div>
+                </div>
+
+                <div class="message-card">
+                  <h3 class="text-lg font-semibold mb-3 text-purple-600">Intenção de Cancelamento</h3>
+                  <div class="space-y-2 text-sm">
+                    <div class="bg-purple-50 p-3 rounded">
+                      <strong>ESP-007:</strong> &#34;Entendido. Cancelamento anotado. Quer me dizer o que não funcionou? (Opcional)&#34;
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded">
+                      <strong>ESP-009:</strong> &#34;Ok, você saiu. Obrigada por tentar. 💭&#34;
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div class="message-card">
+                  <h3 class="text-lg font-semibold mb-3 text-green-600">Retorno Após Pausa Longa</h3>
+                  <div class="space-y-2 text-sm">
+                    <div class="bg-green-50 p-3 rounded">
+                      <strong>ESP-010:</strong> &#34;Voltou! Sem perguntas sobre onde estava. Vamos continuar de onde parou?&#34;
+                    </div>
+                    <div class="bg-green-50 p-3 rounded">
+                      <strong>ESP-012:</strong> &#34;De volta. Não importa quanto tempo passou. Importa o que vem agora.&#34;
+                    </div>
+                  </div>
+                </div>
+
+                <div class="message-card">
+                  <h3 class="text-lg font-semibold mb-3 text-yellow-600">Dúvidas Frequentes</h3>
+                  <div class="space-y-2 text-sm">
+                    <div class="bg-yellow-50 p-3 rounded">
+                      <strong>ESP-013:</strong> &#34;Como funciona? Uma decisão por dia, no seu horário. Você faz, manda &#39;FIZ&#39;.&#34;
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded">
+                      <strong>ESP-014:</strong> &#34;Posso mudar horário? Claro. Manda &#39;MUDAR HORÁRIO&#39; e escolhe: manhã, meio-dia, noite ou varia.&#34;
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded">
+                      <strong>ESP-015:</strong> &#34;Quanto tempo até ver resultado? Depende do corpo, da consistência, da vida. O foco é o processo, não a balança.&#34;
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Controles de Qualidade -->
+      <section id="controles" class="bg-white py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">10. Controles de Qualidade e Restrições do Banco</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+              <div>
+                <h3 class="serif text-2xl font-semibold mb-6 text-gray-800">Unicidade de Aberturas por Tipo</h3>
+
+                <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p class="font-semibold mb-2">Tipo 1: 35/35 aberturas únicas</p>
+                      <p class="font-semibold mb-2">Tipo 2A: 10/10 neutras distintas</p>
+                      <p class="font-semibold mb-2">Tipo 2B: 10/10 identidade única</p>
+                      <p class="font-semibold mb-2">Tipo 2C: 10/10 micro-dicas únicas</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold mb-2">Tipo 3A: 10/10 acolhimentos únicos</p>
+                      <p class="font-semibold mb-2">Tipo 3B: 10/10 alternativas únicas</p>
+                      <p class="font-semibold mb-2">Tipo 3C: 10/10 ressignificações únicas</p>
+                      <p class="font-semibold mb-2">Tipo 4: 21/21 mensagens únicas</p>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 class="serif text-2xl font-semibold mb-6 text-gray-800">Gestão de Emojis</h3>
+
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="font-semibold">Total de emojis no banco:</span>
+                    <span class="text-2xl font-bold text-purple-600">3</span>
+                  </div>
+                  <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                      <span>✓ Confirmação de streak</span>
+                      <span class="text-green-600">1 uso</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>🎯 Marco de 30 dias</span>
+                      <span class="text-green-600">1 uso</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>💭 Cancelamento/acolhimento</span>
+                      <span class="text-green-600">1 uso</span>
+                    </div>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-4">Nenhum emoji repetido mais de 3 vezes no banco total</p>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="serif text-2xl font-semibold mb-6 text-gray-800">Verificação de Volume</h3>
+
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead>
+                      <tr class="bg-gray-100">
+                        <th class="text-left p-3 font-semibold">Tipo</th>
+                        <th class="text-center p-3 font-semibold">Obrigatório</th>
+                        <th class="text-center p-3 font-semibold">Realizado</th>
+                        <th class="text-center p-3 font-semibold">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                      <tr>
+                        <td class="p-3">Ativação Diária</td>
+                        <td class="text-center p-3">35</td>
+                        <td class="text-center p-3">35</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Resposta &#34;FIZ&#34;</td>
+                        <td class="text-center p-3">30</td>
+                        <td class="text-center p-3">30</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Resposta &#34;NÃO CONSEGUI&#34;</td>
+                        <td class="text-center p-3">30</td>
+                        <td class="text-center p-3">30</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Reengajamento</td>
+                        <td class="text-center p-3">21</td>
+                        <td class="text-center p-3">21</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Marcos de Streak</td>
+                        <td class="text-center p-3">20</td>
+                        <td class="text-center p-3">20</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Upsell Contextual</td>
+                        <td class="text-center p-3">12</td>
+                        <td class="text-center p-3">12</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Onboarding</td>
+                        <td class="text-center p-3">10</td>
+                        <td class="text-center p-3">10</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Situações Especiais</td>
+                        <td class="text-center p-3">15</td>
+                        <td class="text-center p-3">15</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                      <tr class="bg-gray-100 font-semibold">
+                        <td class="p-3">TOTAL</td>
+                        <td class="text-center p-3">173</td>
+                        <td class="text-center p-3">173</td>
+                        <td class="text-center p-3"><span class="text-green-600">✓</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-12 p-8 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg">
+              <h3 class="text-xl font-semibold mb-4 text-gray-800">Formato de Saída Padronizado</h3>
+              <p class="mb-4">Todas as mensagens seguem o formato de tabela com colunas:</p>
+
+              <div class="grid md:grid-cols-2 gap-6 text-sm">
+                <div class="space-y-2">
+                  <div><strong>Código da mensagem:</strong> Identificador único (ex: ATIVA-001, FIZ-001)</div>
+                  <div><strong>Situação de uso:</strong> Contexto específico de aplicação</div>
+                </div>
+                <div class="space-y-2">
+                  <div><strong>Texto completo:</strong> Conteúdo exato (máximo 3 linhas)</div>
+                  <div><strong>Perfil indicado:</strong> A/B/C/D ou Todos</div>
+                  <div><strong>Gatilho de envio:</strong> Automático, Manual, Por keyword</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inventário Consolidado -->
+      <section id="inventario" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-8">
+          <div class="max-w-6xl mx-auto">
+            <div class="section-header">
+              <h2 class="serif text-4xl font-bold text-gray-800">11. Inventário Consolidado de Mensagens</h2>
+              <p class="text-xl text-gray-600 mt-4">Quadro completo de 173 mensagens estruturadas e validadas</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-gray-100">
+                    <tr>
+                      <th class="text-left p-4 font-semibold">Tipo</th>
+                      <th class="text-left p-4 font-semibold">Código Inicial</th>
+                      <th class="text-left p-4 font-semibold">Código Final</th>
+                      <th class="text-center p-4 font-semibold">Quantidade</th>
+                      <th class="text-center p-4 font-semibold">Gatilho Principal</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+                    <tr>
+                      <td class="p-4 font-medium">Ativação Diária</td>
+                      <td class="p-4 font-mono">ATIVA-001</td>
+                      <td class="p-4 font-mono">ATIVA-035</td>
+                      <td class="p-4 text-center">35</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Resposta &#34;FIZ&#34; — Neutras</td>
+                      <td class="p-4 font-mono">FIZ-001</td>
+                      <td class="p-4 font-mono">FIZ-010</td>
+                      <td class="p-4 text-center">10</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Resposta &#34;FIZ&#34; — Identidade</td>
+                      <td class="p-4 font-mono">FIZ-011</td>
+                      <td class="p-4 font-mono">FIZ-020</td>
+                      <td class="p-4 text-center">10</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Resposta &#34;FIZ&#34; — Micro-dica</td>
+                      <td class="p-4 font-mono">FIZ-021</td>
+                      <td class="p-4 font-mono">FIZ-030</td>
+                      <td class="p-4 text-center">10</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Resposta &#34;NÃO CONSEGUI&#34; — Acolhimento</td>
+                      <td class="p-4 font-mono">NAO-001</td>
+                      <td class="p-4 font-mono">NAO-010</td>
+                      <td class="p-4 text-center">10</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Resposta &#34;NÃO CONSEGUI&#34; — Alternativa</td>
+                      <td class="p-4 font-mono">NAO-011</td>
+                      <td class="p-4 font-mono">NAO-020</td>
+                      <td class="p-4 text-center">10</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Resposta &#34;NÃO CONSEGUI&#34; — Ressignificação</td>
+                      <td class="p-4 font-mono">NAO-021</td>
+                      <td class="p-4 font-mono">NAO-030</td>
+                      <td class="p-4 text-center">10</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Reengajamento — Dia 1</td>
+                      <td class="p-4 font-mono">REAT-001</td>
+                      <td class="p-4 font-mono">REAT-007</td>
+                      <td class="p-4 text-center">7</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Reengajamento — Dia 2</td>
+                      <td class="p-4 font-mono">REAT-008</td>
+                      <td class="p-4 font-mono">REAT-014</td>
+                      <td class="p-4 text-center">7</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Reengajamento — Dia 3</td>
+                      <td class="p-4 font-mono">REAT-015</td>
+                      <td class="p-4 font-mono">REAT-021</td>
+                      <td class="p-4 text-center">7</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Marcos de Streak — 3 dias</td>
+                      <td class="p-4 font-mono">STREAK-001</td>
+                      <td class="p-4 font-mono">STREAK-004</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Marcos de Streak — 7 dias</td>
+                      <td class="p-4 font-mono">STREAK-005</td>
+                      <td class="p-4 font-mono">STREAK-008</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Marcos de Streak — 14 dias</td>
+                      <td class="p-4 font-mono">STREAK-009</td>
+                      <td class="p-4 font-mono">STREAK-012</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Marcos de Streak — 21 dias</td>
+                      <td class="p-4 font-mono">STREAK-013</td>
+                      <td class="p-4 font-mono">STREAK-016</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Marcos de Streak — 30 dias</td>
+                      <td class="p-4 font-mono">STREAK-017</td>
+                      <td class="p-4 font-mono">STREAK-020</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Upsell 1 (10 FIZ)</td>
+                      <td class="p-4 font-mono">UPSELL-001</td>
+                      <td class="p-4 font-mono">UPSELL-004</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Manual</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Upsell 2 (20 FIZ)</td>
+                      <td class="p-4 font-mono">UPSELL-005</td>
+                      <td class="p-4 font-mono">UPSELL-008</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Manual</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Upsell 3 (25 FIZ)</td>
+                      <td class="p-4 font-mono">UPSELL-009</td>
+                      <td class="p-4 font-mono">UPSELL-012</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Manual</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Onboarding — Boas-vindas</td>
+                      <td class="p-4 font-mono">ONB-001</td>
+                      <td class="p-4 font-mono">ONB-002</td>
+                      <td class="p-4 text-center">2</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Onboarding — Perguntas</td>
+                      <td class="p-4 font-mono">ONB-003</td>
+                      <td class="p-4 font-mono">ONB-007</td>
+                      <td class="p-4 text-center">5</td>
+                      <td class="p-4 text-center">Automático/Keyword</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Onboarding — Confirmação</td>
+                      <td class="p-4 font-mono">ONB-008</td>
+                      <td class="p-4 font-mono">ONB-011</td>
+                      <td class="p-4 text-center">4</td>
+                      <td class="p-4 text-center">Automático</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Situações Especiais — Texto aleatório</td>
+                      <td class="p-4 font-mono">ESP-001</td>
+                      <td class="p-4 font-mono">ESP-003</td>
+                      <td class="p-4 text-center">3</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Situações Especiais — Pausa</td>
+                      <td class="p-4 font-mono">ESP-004</td>
+                      <td class="p-4 font-mono">ESP-006</td>
+                      <td class="p-4 text-center">3</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Situações Especiais — Cancelamento</td>
+                      <td class="p-4 font-mono">ESP-007</td>
+                      <td class="p-4 font-mono">ESP-009</td>
+                      <td class="p-4 text-center">3</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr>
+                      <td class="p-4">Situações Especiais — Retorno</td>
+                      <td class="p-4 font-mono">ESP-010</td>
+                      <td class="p-4 font-mono">ESP-012</td>
+                      <td class="p-4 text-center">3</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                      <td class="p-4">Situações Especiais — Dúvidas</td>
+                      <td class="p-4 font-mono">ESP-013</td>
+                      <td class="p-4 font-mono">ESP-015</td>
+                      <td class="p-4 text-center">3</td>
+                      <td class="p-4 text-center">Keyword</td>
+                    </tr>
+                    <tr class="bg-gray-800 text-white font-bold">
+                      <td class="p-4">TOTAL GERAL</td>
+                      <td class="p-4 text-center">—</td>
+                      <td class="p-4 text-center">—</td>
+                      <td class="p-4 text-center">173</td>
+                      <td class="p-4 text-center">—</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-8 text-center">
+                <div class="inline-flex items-center space-x-4 bg-green-100 text-green-800 px-6 py-3 rounded-lg">
+                  <i class="fas fa-check-circle text-2xl"></i>
+                  <span class="font-semibold">Banco completo e validado com 173 mensagens únicas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-8">
+          <div class="max-w-4xl mx-auto text-center">
+            <h3 class="serif text-2xl font-bold mb-4">Banco de Mensagens &#34;Modo Automático 80/20&#34;</h3>
+            <p class="text-gray-300 mb-8">
+              Sistema completo de comunicação para coaching nutricional via WhatsApp,
+              desenvolvido com base em evidências científicas e princípios de psicologia comportamental.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 text-sm">
+              <div class="bg-gray-700 p-6 rounded-lg">
+                <h4 class="font-semibold mb-3">Principais Características</h4>
+                <ul class="text-gray-300 space-y-1">
+                  <li>• 173 mensagens únicas</li>
+                  <li>• 8 tipos estratégicos</li>
+                  <li>• Tom de voz: amiga especialista</li>
+                  <li>• Sem julgamento ou culpa</li>
+                </ul>
+              </div>
+
+              <div class="bg-gray-700 p-6 rounded-lg">
+                <h4 class="font-semibold mb-3">Base Científica</h4>
+                <ul class="text-gray-300 space-y-1">
+                  <li>• <a href="https://www.psypost.org/ai-chatbots-generate-weight-loss-coaching-messages-perceived-as-helpful-as-human-written-advice/" class="citation text-blue-400">IA com empatia = coaches humanos</a>
+                  </li>
+                  <li>• <a href="https://simple.life/blog/ai-health-coach-supports-weight-loss/" class="citation text-blue-400">Correlação dose-resposta clara</a>
+                  </li>
+                  <li>• <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2729073/" class="citation text-blue-400">Estratégias de reengajamento</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-gray-700 text-sm text-gray-400">
+              <p>Desenvolvido com base em pesquisas de psicologia comportamental e intervenções digitais de saúde.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+        // Mobile TOC Toggle
+        document.getElementById('toc-toggle').addEventListener('click', function() {
+            const toc = document.getElementById('toc');
+            toc.classList.toggle('mobile-open');
+        });
+
+        // Close TOC when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const toc = document.getElementById('toc');
+            const tocToggle = document.getElementById('toc-toggle');
+            const isClickInsideToc = toc.contains(event.target);
+            const isClickOnToggle = tocToggle.contains(event.target);
+            
+            if (window.innerWidth <= 1024 && toc.classList.contains('mobile-open') && !isClickInsideToc && !isClickOnToggle) {
+                toc.classList.remove('mobile-open');
+            }
+        });
+
+        // Active TOC Link Highlighting
+        function updateActiveTocLink() {
+            const sections = document.querySelectorAll('section[id]');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth Scrolling for TOC Links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    const offsetTop = targetElement.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Update active link on scroll
+        window.addEventListener('scroll', updateActiveTocLink);
+        
+        // Initialize active link
+        updateActiveTocLink();
+    </script>
+  
+
+</body></html>
