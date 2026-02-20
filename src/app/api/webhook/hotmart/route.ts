@@ -41,12 +41,17 @@ export async function POST(request: NextRequest) {
         const planId = PRODUCT_PLAN_MAP[productId] ?? '00000000-0000-0000-0000-000000000001'
 
         // Criar usuário no Supabase Auth (se não existir)
+        // getUserByEmail foi removido da Admin API — consultamos a tabela pública
         let userId: string
 
-        const { data: existingUser } = await supabase.auth.admin.getUserByEmail(email)
+        const { data: existingRow } = await supabase
+            .from('users')
+            .select('id')
+            .eq('email', email)
+            .maybeSingle()
 
-        if (existingUser?.user) {
-            userId = existingUser.user.id
+        if (existingRow?.id) {
+            userId = existingRow.id
         } else {
             const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
                 email,
