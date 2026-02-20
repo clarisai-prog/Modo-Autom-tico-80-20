@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
             checkin,
             streak: streak ?? { streak_atual: 0, streak_maximo: 0 },
         })
-    } catch (err) {
+    } catch (_err) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
     }
 }
